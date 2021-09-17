@@ -6,52 +6,46 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>350</height>
+    <width>400</width>
+    <height>67</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>650</width>
-    <height>350</height>
-   </size>
-  </property>
-  <property name="font">
-   <font>
-    <pointsize>9</pointsize>
-   </font>
-  </property>
   <property name="windowTitle">
-   <string>Add Note</string>
+   <string>Input</string>
   </property>
   <property name="windowIcon">
    <iconset>
-    <normalon>../icons/add_note.png</normalon>
+    <normalon>../icons/dialog.png</normalon>
    </iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QTextEdit" name="note_tedit">
-     <property name="tabStopWidth">
-      <number>20</number>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLineEdit" name="input_ledit"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="cancel_button">
+     <property name="text">
+      <string>Cancel</string>
      </property>
-     <property name="placeholderText">
-      <string/>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="1" column="1">
     <widget class="QPushButton" name="submit_button">
      <property name="text">
-      <string>Add Note</string>
+      <string>Submit</string>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>note_tedit</tabstop>
-  <tabstop>submit_button</tabstop>
+  <tabstop>input_ledit</tabstop>
  </tabstops>
  <resources/>
  <connections/>

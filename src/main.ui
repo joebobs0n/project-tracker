@@ -16,8 +16,18 @@
     <height>768</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>9</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Project Tracker</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normalon>../icons/main.png</normalon>
+   </iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -60,9 +70,6 @@
        <property name="spacing">
         <number>5</number>
        </property>
-       <item row="2" column="0">
-        <widget class="QTextBrowser" name="report_browser"/>
-       </item>
        <item row="0" column="0">
         <widget class="QFrame" name="title_frame">
          <property name="frameShape">
@@ -107,6 +114,9 @@
          </layout>
         </widget>
        </item>
+       <item row="2" column="0">
+        <widget class="QTextBrowser" name="report_browser"/>
+       </item>
       </layout>
      </widget>
     </item>
@@ -135,14 +145,17 @@
         <number>5</number>
        </property>
        <item row="0" column="3">
-        <widget class="QDateEdit" name="dateEdit">
+        <widget class="QDateEdit" name="todate_date">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QComboBox" name="comboBox_2">
+        <widget class="QComboBox" name="reportwhich_combo">
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -151,12 +164,12 @@
          </property>
          <item>
           <property name="text">
-           <string>All</string>
+           <string>Selected</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Selected</string>
+           <string>All</string>
           </property>
          </item>
          <item>
@@ -176,19 +189,39 @@
          </item>
         </widget>
        </item>
+       <item row="0" column="2">
+        <widget class="QDateEdit" name="fromdate_date">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox">
+        <widget class="QComboBox" name="reportwhen_combo">
          <property name="placeholderText">
           <string/>
          </property>
          <item>
           <property name="text">
-           <string>Yesterday</string>
+           <string>Today</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>All Time</string>
+           <string>Last Workday</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>This Week</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Last Week</string>
           </property>
          </item>
          <item>
@@ -201,26 +234,24 @@
            <string>From-To</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>All</string>
+          </property>
+         </item>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QDateEdit" name="dateEdit_2">
-         <property name="enabled">
-          <bool>false</bool>
+       <item row="1" column="2" colspan="2">
+        <widget class="QPushButton" name="editreport_button">
+         <property name="text">
+          <string>Edit Report Entry</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="addreport_button">
          <property name="text">
           <string>Add Report Note</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2" colspan="2">
-        <widget class="QPushButton" name="pushButton_4">
-         <property name="text">
-          <string>Edit Report Entry</string>
          </property>
         </widget>
        </item>
@@ -273,13 +304,13 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>200</width>
+     <width>275</width>
      <height>300</height>
     </size>
    </property>
    <property name="font">
     <font>
-     <pointsize>8</pointsize>
+     <pointsize>9</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -324,7 +355,13 @@
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
        </property>
+       <property name="rootIsDecorated">
+        <bool>false</bool>
+       </property>
        <property name="uniformRowHeights">
+        <bool>false</bool>
+       </property>
+       <property name="itemsExpandable">
         <bool>false</bool>
        </property>
        <property name="sortingEnabled">
@@ -336,6 +373,12 @@
        <property name="headerHidden">
         <bool>false</bool>
        </property>
+       <attribute name="headerDefaultSectionSize">
+        <number>65</number>
+       </attribute>
+       <attribute name="headerHighlightSections">
+        <bool>false</bool>
+       </attribute>
        <attribute name="headerStretchLastSection">
         <bool>true</bool>
        </attribute>
@@ -349,11 +392,30 @@
          <string>Name</string>
         </property>
        </column>
-       <column>
+       <item>
         <property name="text">
-         <string>Last Updated</string>
+         <string>3.low</string>
         </property>
-       </column>
+        <property name="text">
+         <string>library api</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2.medium</string>
+        </property>
+        <property name="text">
+         <string>mentor regression flow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1.high</string>
+        </property>
+        <property name="text">
+         <string>n3 emt</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -376,7 +438,7 @@
   <widget class="QDockWidget" name="todo_dock">
    <property name="minimumSize">
     <size>
-     <width>200</width>
+     <width>275</width>
      <height>300</height>
     </size>
    </property>
@@ -444,7 +506,7 @@
   </widget>
   <action name="load_menu">
    <property name="text">
-    <string>Load Group</string>
+    <string>Load</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -468,7 +530,7 @@
   </action>
   <action name="close_menu">
    <property name="text">
-    <string>Close Group</string>
+    <string>Close</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
@@ -505,12 +567,12 @@
   <tabstop>addproject_button</tabstop>
   <tabstop>completeproject_button</tabstop>
   <tabstop>report_browser</tabstop>
-  <tabstop>comboBox_2</tabstop>
-  <tabstop>comboBox</tabstop>
-  <tabstop>dateEdit_2</tabstop>
-  <tabstop>dateEdit</tabstop>
-  <tabstop>pushButton_3</tabstop>
-  <tabstop>pushButton_4</tabstop>
+  <tabstop>reportwhich_combo</tabstop>
+  <tabstop>reportwhen_combo</tabstop>
+  <tabstop>fromdate_date</tabstop>
+  <tabstop>todate_date</tabstop>
+  <tabstop>addreport_button</tabstop>
+  <tabstop>editreport_button</tabstop>
   <tabstop>todo_list</tabstop>
   <tabstop>addtodo_button</tabstop>
   <tabstop>completetodo_button</tabstop>
