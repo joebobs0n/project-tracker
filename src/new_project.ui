@@ -42,8 +42,11 @@
      <property name="text">
       <string>Add Project</string>
      </property>
-     <property name="default">
+     <property name="autoDefault">
       <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -59,6 +62,9 @@
    </item>
    <item row="0" column="0" colspan="3">
     <widget class="QTextEdit" name="details_tedit">
+     <property name="tabChangesFocus">
+      <bool>true</bool>
+     </property>
      <property name="tabStopWidth">
       <number>20</number>
      </property>

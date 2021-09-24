@@ -32,6 +32,9 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QTextEdit" name="note_tedit">
+     <property name="tabChangesFocus">
+      <bool>true</bool>
+     </property>
      <property name="tabStopWidth">
       <number>20</number>
      </property>
@@ -44,6 +47,12 @@
     <widget class="QPushButton" name="submit_button">
      <property name="text">
       <string>Add Note</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

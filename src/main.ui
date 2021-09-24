@@ -115,7 +115,20 @@
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QTextBrowser" name="report_browser"/>
+        <widget class="QTextBrowser" name="report_browser">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="tabStopWidth">
+          <number>20</number>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -144,7 +157,20 @@
        <property name="spacing">
         <number>5</number>
        </property>
-       <item row="0" column="3">
+       <item row="0" column="5">
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="4">
         <widget class="QDateEdit" name="todate_date">
          <property name="enabled">
           <bool>false</bool>
@@ -189,9 +215,12 @@
          </item>
         </widget>
        </item>
-       <item row="0" column="2">
+       <item row="0" column="3">
         <widget class="QDateEdit" name="fromdate_date">
          <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="readOnly">
           <bool>false</bool>
          </property>
          <property name="calendarPopup">
@@ -241,19 +270,21 @@
          </item>
         </widget>
        </item>
-       <item row="1" column="2" colspan="2">
-        <widget class="QPushButton" name="editreport_button">
-         <property name="text">
-          <string>Edit Report Entry</string>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QPushButton" name="addreport_button">
-         <property name="text">
-          <string>Add Report Note</string>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
          </property>
-        </widget>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -322,7 +353,7 @@
     <bool>false</bool>
    </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>Projects</string>
@@ -331,10 +362,7 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="projects_container">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <property name="spacing">
-      <number>5</number>
-     </property>
+    <layout class="QGridLayout" name="gridLayout_3">
      <property name="leftMargin">
       <number>6</number>
      </property>
@@ -347,7 +375,51 @@
      <property name="bottomMargin">
       <number>6</number>
      </property>
-     <item>
+     <item row="1" column="5">
+      <widget class="QPushButton" name="completeproject_button">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/complete.png</normaloff>../icons/complete.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="addproject_button">
+       <property name="toolTip">
+        <string>New Project</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/new_project.png</normaloff>../icons/new_project.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="6">
       <widget class="QTreeWidget" name="projects_tree">
        <property name="alternatingRowColors">
         <bool>true</bool>
@@ -392,43 +464,19 @@
          <string>Name</string>
         </property>
        </column>
-       <item>
-        <property name="text">
-         <string>3.low</string>
-        </property>
-        <property name="text">
-         <string>library api</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2.medium</string>
-        </property>
-        <property name="text">
-         <string>mentor regression flow</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1.high</string>
-        </property>
-        <property name="text">
-         <string>n3 emt</string>
-        </property>
-       </item>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="addproject_button">
+     <item row="1" column="4">
+      <widget class="QPushButton" name="removeproject_button">
        <property name="text">
-        <string>Add New Project</string>
+        <string/>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="completeproject_button">
-       <property name="text">
-        <string>Complete Selected Project</string>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/remove.png</normaloff>../icons/remove.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -438,12 +486,12 @@
   <widget class="QDockWidget" name="todo_dock">
    <property name="minimumSize">
     <size>
-     <width>275</width>
+     <width>306</width>
      <height>300</height>
     </size>
    </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>Todo Items</string>
@@ -452,10 +500,7 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="todo_container">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <property name="spacing">
-      <number>5</number>
-     </property>
+    <layout class="QGridLayout" name="gridLayout_4">
      <property name="leftMargin">
       <number>6</number>
      </property>
@@ -468,7 +513,21 @@
      <property name="bottomMargin">
       <number>6</number>
      </property>
-     <item>
+     <item row="1" column="5">
+      <widget class="QPushButton" name="completetodo_button">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/complete.png</normaloff>../icons/complete.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="6">
       <widget class="QListWidget" name="todo_list">
        <property name="dragDropMode">
         <enum>QAbstractItemView::DragDrop</enum>
@@ -487,22 +546,66 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="0">
       <widget class="QPushButton" name="addtodo_button">
        <property name="text">
-        <string>Add New Todo Item</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/new.png</normaloff>../icons/new.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="completetodo_button">
+     <item row="1" column="4">
+      <widget class="QPushButton" name="removetodo_button">
        <property name="text">
-        <string>Complete Selected Todo Item</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../icons/remove.png</normaloff>../icons/remove.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="newproject_toolbar"/>
+   <addaction name="separator"/>
+   <addaction name="newnote_toolbar"/>
+   <addaction name="editnote_toolbar"/>
+   <addaction name="separator"/>
+   <addaction name="settings_toolbar"/>
   </widget>
   <action name="load_menu">
    <property name="text">
@@ -557,25 +660,60 @@
    </property>
   </action>
   <action name="settings_menu">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Settings</string>
    </property>
   </action>
+  <action name="newproject_toolbar">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/new_project.png</normaloff>../icons/new_project.png</iconset>
+   </property>
+   <property name="text">
+    <string>add new project</string>
+   </property>
+  </action>
+  <action name="editnote_toolbar">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/edit_note.png</normaloff>../icons/edit_note.png</iconset>
+   </property>
+   <property name="text">
+    <string>edit project notes</string>
+   </property>
+  </action>
+  <action name="newnote_toolbar">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/add_note.png</normaloff>../icons/add_note.png</iconset>
+   </property>
+   <property name="text">
+    <string>add project note</string>
+   </property>
+  </action>
+  <action name="settings_toolbar">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/settings.png</normaloff>../icons/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>settings</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
-  <tabstop>projects_tree</tabstop>
-  <tabstop>addproject_button</tabstop>
-  <tabstop>completeproject_button</tabstop>
   <tabstop>report_browser</tabstop>
   <tabstop>reportwhich_combo</tabstop>
   <tabstop>reportwhen_combo</tabstop>
   <tabstop>fromdate_date</tabstop>
   <tabstop>todate_date</tabstop>
-  <tabstop>addreport_button</tabstop>
-  <tabstop>editreport_button</tabstop>
   <tabstop>todo_list</tabstop>
-  <tabstop>addtodo_button</tabstop>
-  <tabstop>completetodo_button</tabstop>
  </tabstops>
  <resources/>
  <connections/>

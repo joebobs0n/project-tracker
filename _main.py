@@ -9,7 +9,7 @@ r'''
 from PyQt5 import QtWidgets
 from src.mainApp import PTApp
 import sys
-# import qdarkstyle
+import qdarkstyle
 
 
 def main():
