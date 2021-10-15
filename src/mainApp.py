@@ -14,12 +14,34 @@ from copy import deepcopy
 class PTApp(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        default_dir_path = Path('default_dir.txt')
+        get_new_default_dir = False
+        if default_dir_path.exists():
+            with open(str(default_dir_path), 'r') as f:
+                default_dir_data = [l for l in f.read().split('\n') if l != '']
+            print(default_dir_data)
+            if len(default_dir_data) == 0 or len(default_dir_data) > 1:
+                get_new_default_dir = True
+            else:
+                self.__default_dir = default_dir_data[0]
+        else:
+            get_new_default_dir = True
+        if get_new_default_dir:
+            self.__default_dir = QFileDialog.getExistingDirectory(self, "Select Default Directory")
+            with open('default_dir.txt', 'w') as f:
+                f.write(self.__default_dir)
+        self.__default_dir = Path(self.__default_dir)
+
         uic.loadUi('src/main.ui', self)
         self.report_browser.setPlaceholderText(' Nothing to report')
-        self.__default_dir = Path(os.path.expanduser('~/Documents/Sibyl/'))
-        if not Path(self.__default_dir).exists():
-            os.makedirs(self.__default_dir / 'project_boards')
-            os.makedirs(self.__default_dir / 'user_settings')
+
+        if not Path(self.__default_dir / 'project_boards').exists():
+            print(f'making {self.__default_dir / "project_boards"} directory')
+            os.makedirs(self.__default_dir / 'project_boards', 0o0777)
+        if not Path(self.__default_dir / 'user_settings').exists():
+            print(f'making {self.__default_dir / "user_settings"} directory')
+            os.makedirs(self.__default_dir / 'user_settings', 0o0777)
 
         self.__clearAll()
         self.__updateDates()
