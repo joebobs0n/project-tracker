@@ -95,9 +95,9 @@
            <number>1</number>
           </property>
           <item>
-           <widget class="QLabel" name="report_label">
+           <widget class="QLabel" name="pb_label">
             <property name="text">
-             <string>Report</string>
+             <string>foobar</string>
             </property>
            </widget>
           </item>
@@ -190,12 +190,12 @@
          </property>
          <item>
           <property name="text">
-           <string>Selected</string>
+           <string>All</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>All</string>
+           <string>Selected</string>
           </property>
          </item>
          <item>
@@ -211,6 +211,11 @@
          <item>
           <property name="text">
            <string>Low Priority</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>No Priority</string>
           </property>
          </item>
         </widget>
@@ -233,6 +238,11 @@
          <property name="placeholderText">
           <string/>
          </property>
+         <item>
+          <property name="text">
+           <string>All</string>
+          </property>
+         </item>
          <item>
           <property name="text">
            <string>Today</string>
@@ -261,11 +271,6 @@
          <item>
           <property name="text">
            <string>From-To</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>All</string>
           </property>
          </item>
         </widget>
@@ -646,7 +651,10 @@
   </action>
   <action name="readme_menu">
    <property name="text">
-    <string>Documentation (README)</string>
+    <string>ReadMe</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="github_menu">
@@ -675,6 +683,9 @@
    <property name="text">
     <string>add new project</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="editnote_toolbar">
    <property name="icon">
@@ -684,6 +695,9 @@
    <property name="text">
     <string>edit project notes</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
   </action>
   <action name="newnote_toolbar">
    <property name="icon">
@@ -692,6 +706,9 @@
    </property>
    <property name="text">
     <string>add project note</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="settings_toolbar">

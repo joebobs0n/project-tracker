@@ -28,7 +28,7 @@ class AddDialog(QDialog):
         self.__submitContents = False
         uic.loadUi('src/add_note.ui', self)
         placeholdertext = [
-            'Note(s) to add to the currently selected project.',
+            'Note(s) to add to the selected project.',
             'Multiple notes to be added are on separate lines.',
             'All notes are automatically timestamped.',
             '',
@@ -39,6 +39,11 @@ class AddDialog(QDialog):
         self.submit_button.clicked.connect(self.__submit)
         self.note_tedit.setFocus()
 
+    def setup(self, current_pb, selected_proj):
+        self.__current_pb = current_pb
+        self.projselect_combo.addItems(list(self.__current_pb['projects'].keys()))
+        self.projselect_combo.setCurrentText(selected_proj)
+
     def __submit(self):
         self.__submitContents = True
         self.close()
@@ -46,9 +51,9 @@ class AddDialog(QDialog):
     def exec_(self):
         super(AddDialog, self).exec_()
         if self.__submitContents:
-            return self.note_tedit.toPlainText().split('\n')
+            return self.projselect_combo.currentText(), [l for l in self.note_tedit.toPlainText().split('\n')]
         else:
-            return ''
+            return None, []
 
 
 #* --- EDIT A GIVEN DAY'S NOTES FOR THE SELECTED PROJECT ------------------------------------------

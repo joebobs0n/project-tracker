@@ -30,20 +30,7 @@
    </iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QTextEdit" name="note_tedit">
-     <property name="tabChangesFocus">
-      <bool>true</bool>
-     </property>
-     <property name="tabStopWidth">
-      <number>20</number>
-     </property>
-     <property name="placeholderText">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
+   <item row="1" column="1">
     <widget class="QPushButton" name="submit_button">
      <property name="text">
       <string>Add Note</string>
@@ -56,10 +43,27 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QComboBox" name="projselect_combo"/>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QTextEdit" name="note_tedit">
+     <property name="tabChangesFocus">
+      <bool>true</bool>
+     </property>
+     <property name="tabStopWidth">
+      <number>20</number>
+     </property>
+     <property name="placeholderText">
+      <string/>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>note_tedit</tabstop>
+  <tabstop>projselect_combo</tabstop>
   <tabstop>submit_button</tabstop>
  </tabstops>
  <resources/>

@@ -8,7 +8,8 @@ r'''
 
 from PyQt5 import QtWidgets
 from src.mainApp import PTApp
-import sys
+from pathlib import Path
+import sys, os
 import qdarkstyle
 
 
@@ -20,4 +21,5 @@ def main():
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
+    os.chdir(Path(__file__).parent)
     main()
