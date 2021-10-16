@@ -573,6 +573,9 @@
         <iconset>
          <normaloff>../icons/new.png</normaloff>../icons/new.png</iconset>
        </property>
+       <property name="shortcut">
+        <string>Ctrl+T</string>
+       </property>
        <property name="flat">
         <bool>true</bool>
        </property>
@@ -608,7 +611,7 @@
    <addaction name="newproject_toolbar"/>
    <addaction name="separator"/>
    <addaction name="newnote_toolbar"/>
-   <addaction name="editnote_toolbar"/>
+   <addaction name="editproject_toolbar"/>
    <addaction name="separator"/>
    <addaction name="settings_toolbar"/>
   </widget>
@@ -687,13 +690,16 @@
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="editnote_toolbar">
+  <action name="editproject_toolbar">
    <property name="icon">
     <iconset>
      <normaloff>../icons/edit_note.png</normaloff>../icons/edit_note.png</iconset>
    </property>
    <property name="text">
-    <string>edit project notes</string>
+    <string>edit project</string>
+   </property>
+   <property name="toolTip">
+    <string>edit project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>

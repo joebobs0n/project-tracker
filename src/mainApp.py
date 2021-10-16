@@ -3,10 +3,11 @@
 from os import close
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import QTimer, QUrl
-from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
+from PyQt5.QtWidgets import QErrorMessage, QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
 import json, re, os
 from pathlib import Path
 from src.dialogs import SettingsDialog, AddDialog, EditDialog, NewDialog, InputDialog
+from src.helpers import *
 import datetime as dt
 from copy import deepcopy
 
@@ -20,7 +21,6 @@ class PTApp(QMainWindow):
         if default_dir_path.exists():
             with open(str(default_dir_path), 'r') as f:
                 default_dir_data = [l for l in f.read().split('\n') if l != '']
-            print(default_dir_data)
             if len(default_dir_data) == 0 or len(default_dir_data) > 1:
                 get_new_default_dir = True
             else:
@@ -36,12 +36,19 @@ class PTApp(QMainWindow):
         uic.loadUi('src/main.ui', self)
         self.report_browser.setPlaceholderText(' Nothing to report')
 
-        if not Path(self.__default_dir / 'project_boards').exists():
-            print(f'making {self.__default_dir / "project_boards"} directory')
-            os.makedirs(self.__default_dir / 'project_boards', 0o0777)
-        if not Path(self.__default_dir / 'user_settings').exists():
-            print(f'making {self.__default_dir / "user_settings"} directory')
-            os.makedirs(self.__default_dir / 'user_settings', 0o0777)
+        try:
+            if not Path(self.__default_dir / 'project_boards').exists():
+                os.makedirs(self.__default_dir / 'project_boards', 0o0777)
+            if not Path(self.__default_dir / 'user_settings').exists():
+                os.makedirs(self.__default_dir / 'user_settings', 0o0777)
+        except PermissionError:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText('Sibyl encountered permission issues while creating default directories.')
+            msg.setInformativeText('Please restart and choose a different directory or change the desired directory\'s permissions.')
+            msg.setWindowTitle("Permission Error")
+            msg.setWindowIcon(QtGui.QIcon('icons/dialog.png'))
+            msg.exec_()
 
         self.__clearAll()
         self.__updateDates()
@@ -50,6 +57,9 @@ class PTApp(QMainWindow):
 
         self.projects_tree.sortItems(0, 0)
         self.reportwhen_combo.setCurrentIndex(1)
+
+    def setVersion(self, ver):
+        self.__version = ver
 
     def closeEvent(self, evt):
         if self.__unsaved_changes:
@@ -67,10 +77,7 @@ class PTApp(QMainWindow):
 
     def tic(self):
         self.__date = dt.datetime.now()
-        self.__today = f'{self.__date.month}/{self.__date.day}/{self.__date.year}'
-        self.__time = self.__date.strftime('%I:%M%p').lower()
-        if self.__time[0] == '0':
-            self.__time = self.__time[1:]
+        _, self.__time, self.__today = getTimeInfo()
         self.date_label.setText(f'{self.__today} - {self.__time}')
         self.__unsaved_changes = (self.__current_pb != self.__previous_save_state)
 
@@ -124,7 +131,7 @@ class PTApp(QMainWindow):
         self.todate_date.dateChanged.connect(self.__updateReport)
         self.reportwhich_combo.currentTextChanged.connect(self.__updateReport)
         self.newnote_toolbar.triggered.connect(self.__addReport)
-        self.editnote_toolbar.triggered.connect(self.__editReport)
+        self.editproject_toolbar.triggered.connect(self.__editReport)
         self.newproject_toolbar.triggered.connect(self.__newProject)
         self.settings_toolbar.triggered.connect(self.__settings)
         self.removeproject_button.clicked.connect(self.__removeProject)
@@ -215,7 +222,7 @@ class PTApp(QMainWindow):
         info = [
             'Framework: PyQt5',
             'Icons: Candy Icons by EliverLara',
-            f'Version: 0.0.2',
+            f'Version: {self.__version}',
             '',
             'Author: Andy Monk',
             'Email: czech.monk90@gmail.com'
@@ -266,9 +273,9 @@ class PTApp(QMainWindow):
         add = AddDialog()
         add.setup(self.__current_pb, self.__selectedProject)
         proj, retval = add.exec_()
-        notes_md = self.__convertMarkdown(retval)
+        notes_md = convertMarkdown(retval, self.__time)
         if len(notes_md) != 0:
-            epoch, _ = self.__getTimeInfo()
+            epoch, *_ = getTimeInfo()
             epoch = str(epoch)
             if epoch not in self.__current_pb['projects'][proj]['reports'].keys():
                 self.__current_pb['projects'][proj]['reports'][epoch] = [
@@ -281,16 +288,26 @@ class PTApp(QMainWindow):
         todo = InputDialog()
         todo.which('New Todo Item')
         retval = todo.exec_()
-        self.__selectedProjObj['todos'].append(retval)
-        self.__statusMessage(f'todo item {retval.upper()} added')
-        self.__populateTodos()
+        if retval != '':
+            self.__selectedProjObj['todos'].append(retval)
+            self.__statusMessage(f'todo item {retval.upper()} added')
+            self.__populateTodos()
 
     def __editReport(self):
         edit = EditDialog()
-        edit.setup(self.__current_pb)
-        retval = edit.exec_()
-        self.__statusMessage(retval)
-        self.__updateReport()
+        edit.setup(self.__current_pb, self.__selectedProject)
+        name, priority, proj, day, report = edit.exec_()
+        if proj != None:
+            if report != None:
+                self.__current_pb['projects'][proj]['reports'][day] = report
+            if priority != self.__current_pb['projects'][proj]['priority']:
+                self.__current_pb['projects'][proj]['priority'] = priority
+                self.__populateProjects()
+            if name != proj:
+                self.__current_pb['projects'][name] = deepcopy(self.__current_pb['projects'][proj])
+                self.__removeProject(name=proj)
+            self.__statusMessage(f'{proj.upper()} report id {day} updated')
+            self.__updateReport()
 
     def __settings(self):
         settings = SettingsDialog()
@@ -306,7 +323,7 @@ class PTApp(QMainWindow):
             self.completeproject_button.setEnabled(True)
             self.addtodo_button.setEnabled(True)
             self.newnote_toolbar.setEnabled(True)
-            # self.editnote_toolbar.setEnabled(True)
+            self.editproject_toolbar.setEnabled(True)
         else:
             self.removeproject_button.setEnabled(False)
             self.completeproject_button.setEnabled(False)
@@ -314,7 +331,7 @@ class PTApp(QMainWindow):
             self.completetodo_button.setEnabled(False)
             self.addtodo_button.setEnabled(False)
             self.newnote_toolbar.setEnabled(False)
-            # self.editnote_toolbar.setEnabled(False)
+            self.editproject_toolbar.setEnabled(False)
         self.__updateReport()
 
     def __todoChanged(self):
@@ -362,11 +379,14 @@ class PTApp(QMainWindow):
         if when != 'From-To':
             self.todate_date.setDate(qto)
 
-    def __removeProject(self, action='removed'):
-        del self.__current_pb['projects'][self.__selectedProject]
-        self.__selectedProjObj = None
-        self.__statusMessage(f'project {self.__selectedProject.upper()} {action}')
-        self.__selectedProject = None
+    def __removeProject(self, action='removed', name=None):
+        if name == None:
+            name = self.__selectedProject
+        del self.__current_pb['projects'][name]
+        self.__statusMessage(f'project {name.upper()} {action}')
+        if name == self.__selectedProject:
+            self.__selectedProjObj = None
+            self.__selectedProject = None
         self.todo_list.clear()
         self.__populateProjects()
         self.__updateReport()
@@ -385,7 +405,7 @@ class PTApp(QMainWindow):
         self.__updateReport()
 
     def __completeTodo(self):
-        epoch, today_time = self.__getTimeInfo()
+        epoch, *_ = getTimeInfo()
         epoch = str(epoch)
         proj_reports = self.__selectedProjObj['reports']
         if epoch not in proj_reports.keys():
@@ -415,8 +435,8 @@ class PTApp(QMainWindow):
                 if obj['priority'] == proj_sel:
                     report_projects.append(name)
 
-        fromtime, _ = self.__getTimeInfo(conv_time=self.fromdate_date.dateTime().toPyDateTime())
-        totime, _ = self.__getTimeInfo(conv_time=self.todate_date.dateTime().toPyDateTime())
+        fromtime, *_ = getTimeInfo(conv_time=self.fromdate_date.dateTime().toPyDateTime())
+        totime, *_ = getTimeInfo(conv_time=self.todate_date.dateTime().toPyDateTime())
         try:
             if report_projects != None and len(report_projects) > 0:
                 to_report = []
@@ -432,6 +452,7 @@ class PTApp(QMainWindow):
                             this_proj.insert(0, f'# {proj_name}')
                             this_proj.insert(1, '----')
                             to_report.append('\n\n'.join(this_proj))
+                # self.report_browser.setHtml('<p style="color:red">hi</p>')
                 self.report_browser.setMarkdown('\n\n```\n\n```\n\n'.join(to_report))
             else:
                 raise AttributeError
@@ -462,6 +483,7 @@ class PTApp(QMainWindow):
             qitem.setText(0, obj['priority'])
             qitem.setText(1, name)
             self.projects_tree.addTopLevelItem(qitem)
+        self.projects_tree.setCurrentItem(self.projects_tree.itemAt(0,0))
 
     def __populateTodos(self):
         self.todo_list.setCurrentItem(None)
@@ -497,7 +519,7 @@ class PTApp(QMainWindow):
         self.completetodo_button.setEnabled(False)
         self.addtodo_button.setEnabled(False)
         self.newnote_toolbar.setEnabled(False)
-        self.editnote_toolbar.setEnabled(False)
+        self.editproject_toolbar.setEnabled(False)
 
     def __enableDates(self, en_from, en_to):
         if en_from != self.fromdate_date.isEnabled():
@@ -505,81 +527,4 @@ class PTApp(QMainWindow):
         if en_to != self.todate_date.isEnabled():
             self.todate_date.setEnabled(en_to)
 
-    def __getTimeInfo(self, conv_time=dt.datetime.today()):
-        time = f'{conv_time.hour}:{conv_time.minute}'
-        epoch = conv_time - dt.timedelta(
-            hours=conv_time.hour,
-            minutes=conv_time.minute,
-            seconds=conv_time.second,
-            microseconds=conv_time.microsecond
-        )
-        epoch = epoch.timestamp()
-        return int(epoch), time
 
-    def __convertMarkdown(self, lines):
-        lines = [l for l in lines]
-        ret = []
-        i = 0
-        while i < len(lines):
-            line = ''
-            if lines[i] != '':
-                if lines[i][0] == '|':
-                    ret.append(f'- [{self.__time}] following table added')
-                    temp = []
-                    while i < len(lines) and lines[i][0] == '|':
-                        temp.append(lines[i])
-                        i += 1
-                    line = '\n'.join(temp)
-                elif lines[i][0] == '<':
-                    open_tag = re.findall(r'^<\w+\s|^<\w+>', lines[i])
-                    open_tag = lines[0] if len(open_tag) == 0 else open_tag[0]
-                    if open_tag[-1] != '>':
-                        open_tag = f'{open_tag.strip()}>'
-                    if open_tag[:2] != '</':
-                        close_tag = list(open_tag)
-                        close_tag.insert(1, '/')
-                        close_tag = ''.join(close_tag)
-                        if re.findall(close_tag, lines[i]) != []:
-                            line = lines[i]
-                            i += 1
-                        else:
-                            temp = []
-                            while re.findall(close_tag, lines[i]) == []:
-                                temp.append(lines[i])
-                                i += 1
-                            temp.append(lines[i])
-                            i += 1
-                            line = '\n'.join(temp)
-                    else:
-                        line = lines[i]
-                        i += 1
-                elif lines[i][:4] == '```':
-                    ret.append(f'- [{self.__time}] following code block added')
-                    temp = []
-                    if re.findall('```.+', lines[i]) != []:
-                        temp.append('```')
-                        temp.append(lines[i][3:])
-                    else:
-                        temp.append(lines[i])
-                    i += 1
-                    while re.findall('```', lines[i]) == []:
-                        temp.append(lines[i])
-                        i += 1
-                    if re.findall('.+```', lines[i]) != []:
-                        temp.append(lines[i][:-3])
-                        temp.append('```')
-                    else:
-                        temp.append(lines[i])
-                    i += 1
-                    line = '\n'.join(temp)
-                else:
-                    line = lines[i]
-                    line = line.strip()
-                    if line[0] == '*' or line[0] == '-':
-                        line = line[1:].strip()
-                    line = f'- [{self.__time}] {line}'
-                    i += 1
-                ret.append(line)
-            else:
-                i += 1
-        return ret

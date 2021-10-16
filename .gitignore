@@ -8,3 +8,6 @@ _main.spec
 _config.yaml
 dist/*
 build/*
+default_dir.txt
+project_boards/*
+user_settings/*

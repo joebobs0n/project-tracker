@@ -14,9 +14,14 @@ import qdarkstyle
 
 
 def main():
+    version = '1.0.2'
+
     app = QtWidgets.QApplication([])
-    # app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+    with open('src/stylesheet.scss', 'r') as f:
+        css = f.read()
+    # app.setStyleSheet(css)
     win = PTApp()
+    win.setVersion(version)
     win.show()
     sys.exit(app.exec_())
 
