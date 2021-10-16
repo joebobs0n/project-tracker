@@ -10,15 +10,15 @@ from PyQt5 import QtWidgets
 from src.mainApp import PTApp
 from pathlib import Path
 import sys, os
-import qdarkstyle
+# import qdarkstyle
 
 
 def main():
     version = '1.0.2'
 
     app = QtWidgets.QApplication([])
-    with open('src/stylesheet.scss', 'r') as f:
-        css = f.read()
+    # with open('src/stylesheet.scss', 'r') as f:
+    #     css = f.read()
     # app.setStyleSheet(css)
     win = PTApp()
     win.setVersion(version)

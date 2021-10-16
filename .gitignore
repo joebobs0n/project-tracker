@@ -11,3 +11,4 @@ build/*
 default_dir.txt
 project_boards/*
 user_settings/*
+win_console_compile.bat

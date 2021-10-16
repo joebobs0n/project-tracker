@@ -182,6 +182,9 @@
        </item>
        <item row="0" column="0">
         <widget class="QComboBox" name="reportwhich_combo">
+         <property name="toolTip">
+          <string>Project Filter</string>
+         </property>
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -235,6 +238,9 @@
        </item>
        <item row="0" column="1">
         <widget class="QComboBox" name="reportwhen_combo">
+         <property name="toolTip">
+          <string>Date Filter</string>
+         </property>
          <property name="placeholderText">
           <string/>
          </property>
@@ -382,6 +388,9 @@
      </property>
      <item row="1" column="5">
       <widget class="QPushButton" name="completeproject_button">
+       <property name="toolTip">
+        <string>Complete Project</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -410,7 +419,7 @@
      <item row="1" column="0">
       <widget class="QPushButton" name="addproject_button">
        <property name="toolTip">
-        <string>New Project</string>
+        <string>New Project [Ctrl+P]</string>
        </property>
        <property name="text">
         <string/>
@@ -473,6 +482,9 @@
      </item>
      <item row="1" column="4">
       <widget class="QPushButton" name="removeproject_button">
+       <property name="toolTip">
+        <string>Remove Project</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -520,6 +532,9 @@
      </property>
      <item row="1" column="5">
       <widget class="QPushButton" name="completetodo_button">
+       <property name="toolTip">
+        <string>Complete Todo</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -566,6 +581,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QPushButton" name="addtodo_button">
+       <property name="toolTip">
+        <string>Add Todo [Ctrl+T]</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -583,6 +601,9 @@
      </item>
      <item row="1" column="4">
       <widget class="QPushButton" name="removetodo_button">
+       <property name="toolTip">
+        <string>Remove Todo</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -686,6 +707,9 @@
    <property name="text">
     <string>add new project</string>
    </property>
+   <property name="toolTip">
+    <string>New Project [Ctrl+P]</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
    </property>
@@ -699,7 +723,7 @@
     <string>edit project</string>
    </property>
    <property name="toolTip">
-    <string>edit project</string>
+    <string>Edit Project [Ctrl+E]</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
@@ -712,6 +736,9 @@
    </property>
    <property name="text">
     <string>add project note</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Note [Ctrl+N]</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -727,6 +754,9 @@
    </property>
    <property name="text">
     <string>settings</string>
+   </property>
+   <property name="toolTip">
+    <string>Settings</string>
    </property>
   </action>
  </widget>
