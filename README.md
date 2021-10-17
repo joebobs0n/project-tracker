@@ -15,6 +15,7 @@
   - [Recommended](#recommended)
   - [From Source](#from-source)
 - [Getting Started](#getting-started)
+  - [First Time Launch](#first-time-launch)
 - [Detailed Documentation](#detailed-documentation)
 - [Resources](#resources)
 - [License](#license)
@@ -90,6 +91,8 @@ Currently, there are two different ways of "installing" Sibyl:
 # Getting Started
 
 First things first, this major version of Sibyl is developed to only work on Windows. Currently there are plans to make another major version that moves away from `PyQt5` to `Node` and `Electron` which has better capabilities to support other operating systems (Windows, MacOS, Linux, Android, iOS).
+
+## First Time Launch
 
 # Detailed Documentation
 
