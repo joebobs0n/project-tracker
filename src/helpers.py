@@ -87,7 +87,7 @@ def convertMarkdown(lines, timestamp):
             ret.append(line)
     return ret
 
-def getTimeInfo(conv_time=datetime.datetime.now()):
+def getTimeInfo(conv_time):
     epoch = conv_time - datetime.timedelta(
         hours=conv_time.hour,
         minutes=conv_time.minute,

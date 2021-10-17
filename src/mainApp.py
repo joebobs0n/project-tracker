@@ -93,7 +93,7 @@ class PTApp(QMainWindow):
 
     def tic(self):
         self.__date = dt.datetime.now()
-        _, self.__time, self.__today = getTimeInfo()
+        _, self.__time, self.__today = getTimeInfo(self.__date)
         self.date_label.setText(f'{self.__today} - {self.__time}')
         self.__unsaved_changes = (self.__current_pb != self.__previous_save_state)
 
@@ -293,7 +293,7 @@ class PTApp(QMainWindow):
         proj, retval = add.exec_()
         notes_md = convertMarkdown(retval, self.__time)
         if len(notes_md) != 0:
-            epoch, *_ = getTimeInfo()
+            epoch, *_ = getTimeInfo(self.__date)
             epoch = str(epoch)
             if epoch not in self.__current_pb['projects'][proj]['reports'].keys():
                 self.__current_pb['projects'][proj]['reports'][epoch] = [
@@ -423,7 +423,7 @@ class PTApp(QMainWindow):
         self.__updateReport()
 
     def __completeTodo(self):
-        epoch, *_ = getTimeInfo()
+        epoch, *_ = getTimeInfo(self.__date)
         epoch = str(epoch)
         proj_reports = self.__selectedProjObj['reports']
         if epoch not in proj_reports.keys():
@@ -465,13 +465,13 @@ class PTApp(QMainWindow):
                             epoch = int(epoch)
                             if epoch >= fromtime and epoch <= totime:
                                 this_proj.extend(report)
-                                # this_proj.append('```\n\n```')
+                                this_proj.append('` `')
                         if len(this_proj) > 0:
                             this_proj.insert(0, f'# {proj_name}')
                             this_proj.insert(1, '----')
                             to_report.append('\n\n'.join(this_proj))
                 # self.report_browser.setHtml('<p style="color:red">hi</p>')
-                self.report_browser.setMarkdown('\n\n```\n\n```\n\n'.join(to_report))
+                self.report_browser.setMarkdown('\n\n` `\n\n'.join(to_report))
             else:
                 raise AttributeError
         except (AttributeError, KeyError):
