@@ -73,7 +73,7 @@ Currently, there are two different ways of "installing" Sibyl:
 
 1. Work on WSL or Linux machine if you want to use the compiler script (see step 7)
 2. Ensure that you have [`pyinstaller`](https://pypi.org/project/pyinstaller/)
-3. Acquire the code base either through [`git clone`](https://githubm.com/joebobs0n/project-tracker) or downloading the desired version `Source Code.zip` from the [releases page](https://github.com/joebobs0n/project-tracker/releases)
+3. Acquire the code base either through [`git clone`](https://github.com/joebobs0n/project-tracker) or downloading the desired version `Source Code.zip` from the [releases page](https://github.com/joebobs0n/project-tracker/releases)
 4. Resolve any missing package dependancies
 5. Make desired modifications
 6. Change version number/name in `src/magic_numbers.py` to differentiate your code
