@@ -435,6 +435,12 @@
      </item>
      <item row="0" column="0" colspan="6">
       <widget class="QTreeWidget" name="projects_tree">
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragDrop</enum>
+       </property>
+       <property name="defaultDropAction">
+        <enum>Qt::MoveAction</enum>
+       </property>
        <property name="alternatingRowColors">
         <bool>true</bool>
        </property>
@@ -717,7 +723,7 @@
   <action name="editproject_toolbar">
    <property name="icon">
     <iconset>
-     <normaloff>../icons/edit_note.png</normaloff>../icons/edit_note.png</iconset>
+     <normaloff>../icons/edit_project.png</normaloff>../icons/edit_project.png</iconset>
    </property>
    <property name="text">
     <string>edit project</string>

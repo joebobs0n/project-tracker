@@ -1,20 +1,22 @@
 #!/usr/bin/python3
 
-from os import close
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWidgets import QErrorMessage, QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
-import json, re, os
+import json, os
 from pathlib import Path
 from src.dialogs import SettingsDialog, AddDialog, EditDialog, NewDialog, InputDialog
 from src.helpers import *
 import datetime as dt
 from copy import deepcopy
+import src.magic_numbers as magic
 
 
 class PTApp(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.__tic_rate = magic.tic_rate
+        self.__version = magic.version
 
         default_dir_path = Path('default_dir.txt')
         get_new_default_dir = False
@@ -29,8 +31,21 @@ class PTApp(QMainWindow):
             get_new_default_dir = True
         if get_new_default_dir:
             self.__default_dir = QFileDialog.getExistingDirectory(self, "Select Default Directory")
-            with open('default_dir.txt', 'w') as f:
-                f.write(self.__default_dir)
+            try:
+                with open('default_dir.txt', 'w') as f:
+                    f.write(self.__default_dir)
+            except PermissionError:
+                popup(
+                    'Permission Error',
+                    (
+                        'Sibyl encountered permission issues while writing default_dir.txt in main program root directory.',
+                        'Please move program files to a different directory or change the desired directory\'s permissions.'
+                    ),
+                    QMessageBox.Critical,
+                    QtGui.QIcon('icons/dialog')
+                )
+                self.close()
+
         self.__default_dir = Path(self.__default_dir)
 
         uic.loadUi('src/main.ui', self)
@@ -42,13 +57,17 @@ class PTApp(QMainWindow):
             if not Path(self.__default_dir / 'user_settings').exists():
                 os.makedirs(self.__default_dir / 'user_settings', 0o0777)
         except PermissionError:
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText('Sibyl encountered permission issues while creating default directories.')
-            msg.setInformativeText('Please restart and choose a different directory or change the desired directory\'s permissions.')
-            msg.setWindowTitle("Permission Error")
-            msg.setWindowIcon(QtGui.QIcon('icons/dialog.png'))
-            msg.exec_()
+            popup(
+                'Permission Error',
+                (
+                    'Sibyl encountered permission issues while creating default directories.',
+                    'Please restart and choose a different directory or change the desired directory\'s permissions.'
+                ),
+                QMessageBox.Critical,
+                QtGui.QIcon('icons/dialog')
+            )
+            os.remove('default_dir.txt')
+            self.close()
 
         self.__clearAll()
         self.__updateDates()
@@ -57,9 +76,6 @@ class PTApp(QMainWindow):
 
         self.projects_tree.sortItems(0, 0)
         self.reportwhen_combo.setCurrentIndex(1)
-
-    def setVersion(self, ver):
-        self.__version = ver
 
     def closeEvent(self, evt):
         if self.__unsaved_changes:
@@ -101,6 +117,8 @@ class PTApp(QMainWindow):
             except AttributeError:
                 pass
 
+        self.__todoOrder()
+
     def __statusMessage(self, msg):
         self.statusBar().showMessage(msg)
 
@@ -108,7 +126,7 @@ class PTApp(QMainWindow):
         #? --- TIME TRIGGER -----------------------------------------------------------------------
         timer = QTimer(self)
         timer.timeout.connect(self.tic)
-        timer.start(50)
+        timer.start(self.__tic_rate)
 
         #? --- MENU TRIGGERS ----------------------------------------------------------------------
         self.load_menu.triggered.connect(self.__load)
@@ -526,5 +544,12 @@ class PTApp(QMainWindow):
             self.fromdate_date.setEnabled(en_from)
         if en_to != self.todate_date.isEnabled():
             self.todate_date.setEnabled(en_to)
+
+    def __todoOrder(self):
+        item_order = []
+        for idx in range(len(self.todo_list)):
+            item_order.append(self.todo_list.item(idx).text())
+        if self.__selectedProjObj != None:
+            self.__selectedProjObj['todos'] = item_order
 
 

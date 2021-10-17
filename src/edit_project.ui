@@ -22,12 +22,11 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Edit Note</string>
+   <string>Edit Project</string>
   </property>
   <property name="windowIcon">
    <iconset>
-    <normalon>../icons/edit_note.png</normalon>
-   </iconset>
+    <normaloff>../icons/edit_project.png</normaloff>../icons/edit_project.png</iconset>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>

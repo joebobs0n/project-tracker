@@ -1,4 +1,7 @@
 import re, datetime
+from PyQt5 import QtGui
+
+from PyQt5.QtWidgets import QMessageBox
 
 def convertMarkdown(lines, timestamp):
     # temp = []
@@ -100,3 +103,18 @@ def getTimeInfo(conv_time=datetime.datetime.now()):
     date = f'{conv_time.month}/{conv_time.day}/{conv_time.year}'
 
     return int(epoch), time, date
+
+def popup(title, message, level, icon):
+    if type(message) == tuple:
+        text, infotext = message
+    else:
+        text = message
+        infotext = None
+    msg = QMessageBox()
+    msg.setIcon(level)
+    msg.setText(text)
+    if infotext != None:
+        msg.setInformativeText(infotext)
+    msg.setWindowTitle(title)
+    msg.setWindowIcon(icon)
+    msg.exec_()
