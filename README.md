@@ -1,12 +1,23 @@
 
 <table width="100%">
-    <tr valign="middle";>
+    <tr>
         <td width="75px"><img src="icons/main.png" height=70/></td>
         <td><h1>Sibyl - A Simple, No Nonsense Project Tracker</h1></td>
     </tr>
 </table>
 
-</br>
+# Contents
+- [Contents](#contents)
+- [Introduction](#introduction)
+  - [Motivation](#motivation)
+  - [Solution](#solution)
+- [Installation](#installation)
+  - [Recommended](#recommended)
+  - [From Source](#from-source)
+- [Getting Started](#getting-started)
+- [Detailed Documentation](#detailed-documentation)
+- [Resources](#resources)
+- [License](#license)
 
 # Introduction
 
@@ -29,8 +40,6 @@ By trying so many different solutions to the same problem (help track projects) 
 
 While these resources above are very powerful in their own right, I feel that in most cases, with the obvious exceptions, in order to implement fancy, more robust features, the basic ones would get unnecessarily complicated. This led to fatigue and eventual loss of interest in a given project due to all of my energy went toward fighting an unnecessary battle instead of into working.
 
-</br>
-
 ## Solution
 
 At the end of the day, I realized that what I needed was a piece of software that would keep track of my projects by taking simple settings and then reporting the sorted data without all the fancy features such as team projects or [Gantt charts](https://en.wikipedia.org/wiki/Gantt_chart). This way, at a glance, I could see all of my projects, documentation/notes, and todo items in one place.
@@ -43,31 +52,12 @@ Explanation of the UI can be found in the [Getting Started](#getting-started) se
 
 It may be a little meta, but I am using Sibyl to track my progress/todo items for Sibyl. What better test case? If you want, you can read all of the todo items for this project to see what features may be coming in the future, but I make no promises.
 
-</br>
-
-# Table of Contents
-- [Introduction](#introduction)
-  - [Motivation](#motivation)
-  - [Solution](#solution)
-- [Table of Contents](#table-of-contents)
-- [Installation](#installation)
-  - [Recommended](#recommended)
-  - [From Source](#from-source)
-- [Getting Started](#getting-started)
-- [Detailed Documentation](#detailed-documentation)
-- [Resources](#resources)
-- [License](#license)
-
-</br>
-
 # Installation
 
 Currently, there are two different ways of "installing" Sibyl:
 
 - downloading and extracting the `sibyl-no-install-v*.zip`: quick, easy, and recommended.
 - compiling from source: if you don't like how I did something and can navigate my spaghetti code to make the fix, this is your solution.
-
-</br>
 
 ## Recommended
 
@@ -78,8 +68,6 @@ Currently, there are two different ways of "installing" Sibyl:
    - It is recommended to extract to `~/Documents/Sibyl`
    - If the user does not have write permission in the extracted directory, the sotware will inform the user and provide instructions to reslove the issue.
 4. [Optional] Create a shortcut of `Sibyl.exe` to the desktop or taskbar as the program will not show up in the start menu (hence `no-install`).
-
-</br>
 
 ## From Source
 
@@ -99,17 +87,11 @@ Currently, there are two different ways of "installing" Sibyl:
      3. Copy `icons\*` to `dist\icons\.`
      4. Your distribution files will now be in `dist\.`
 
-</br>
-
 # Getting Started
 
 First things first, this major version of Sibyl is developed to only work on Windows. Currently there are plans to make another major version that moves away from `PyQt5` to `Node` and `Electron` which has better capabilities to support other operating systems (Windows, MacOS, Linux, Android, iOS).
 
-</br>
-
 # Detailed Documentation
-
-</br>
 
 # Resources
 
@@ -117,8 +99,4 @@ First things first, this major version of Sibyl is developed to only work on Win
 - [PyQt5](https://pypi.org/project/PyQt5/)
 - [Candy Icons](https://github.com/EliverLara/candy-icons)
 
-</br>
-
 # License
-
-</br>
