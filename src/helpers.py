@@ -74,9 +74,10 @@ def convertMarkdown(lines, timestamp):
         else:
             line = lines[i]
             line = line.strip()
-            if line[0] == '*' or line[0] == '-':
-                line = f'[{timestamp}] {line[1:].strip()}'
-            elif line[0] == '!':
+            # if line[0] == '*' or line[0] == '-':
+            #     line = f'[{timestamp}] {line[1:].strip()}'
+            # elif line[0] == '!':
+            if line[0] == '!':
                 line = line[1:].strip()
             else:
                 line = f'[{timestamp}] {line}'

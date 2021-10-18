@@ -32,7 +32,7 @@ class AddDialog(QDialog):
             'Multiple notes can be added at a time by using separate lines',
             'Each line is converted to a bulletpoint (except tables and multi-line code blocks)',
             'All bulletpoints are timestamped unless the line begins with "!"',
-            'Notes support simple Markdown (i.e. things such as links, emphasis, bold, underline etc)',
+            'Notes support simple Markdown (i.e. things such as links, emphasis, bold, etc)',
             'Empty line can be added with "</br>"'
         ]
         self.note_tedit.setPlaceholderText('\n'.join(placeholdertext))
@@ -146,7 +146,7 @@ class NewDialog(QDialog):
             '\'Add to Templates\' button.',
             '',
             'Example:',
-            '<task name> - <priority [1-4]>',
+            '<project name> - <priority [1-4]>',
             '- task 1',
             '- task 2',
             '- ...',
