@@ -1,16 +1,15 @@
-import re, datetime
-from PyQt5 import QtGui
-
+import re, datetime, shutil, os, requests, time, sys
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtGui import QIcon
+from github import Github
+from multiprocessing import Process
+from src.magic_numbers import version
+from pathlib import Path
+from zipfile import ZipFile
+from glob import glob
+import subprocess as sp
 
 def convertMarkdown(lines, timestamp):
-    # temp = []
-    # for line in lines:
-    #     l = [x for x in line.replace('//', '#</br>#').split('#')]
-    #     temp.extend(l)
-    # lines = temp
-
-    # lines = [l.split() for l in lines]
     ret = []
     i = 0
     while i < len(lines):
@@ -97,7 +96,7 @@ def getTimeInfo(conv_time):
     )
     epoch = epoch.timestamp()
 
-    time = conv_time.strftime('%I:%M%p').lower()
+    time = conv_time.strftime('%I:%M:%S %p').lower()
     if time[0] == '0':
         time = time[1:]
 
@@ -105,7 +104,7 @@ def getTimeInfo(conv_time):
 
     return int(epoch), time, date
 
-def popup(title, message, level, icon):
+def popup(title, message, level):
     if type(message) == tuple:
         text, infotext = message
     else:
@@ -117,5 +116,73 @@ def popup(title, message, level, icon):
     if infotext != None:
         msg.setInformativeText(infotext)
     msg.setWindowTitle(title)
-    msg.setWindowIcon(icon)
+    msg.setWindowIcon(QIcon('icons/dialog.png'))
     msg.exec_()
+
+def checkLatest():
+    gh = Github(login_or_token="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")
+    repo = gh.get_repo('joebobs0n/project-tracker')
+    latest = convVersion(list(repo.get_tags())[0].name)
+    current = convVersion(version)
+
+    if current[0] < latest[0]:
+        popup(
+            'Major Update Available',
+            (
+                'Major updates are complete overhauls and cannot be auto-updated.',
+                'Please visit https://joebobs0n.github.io/project-tracker/ for more information.'
+            ),
+            QMessageBox.Critical
+        )
+    elif current[1] < latest[1]:
+        popup(
+            'Minor Update Available',
+            'Would you like to install the minor update?',
+            QMessageBox.Critical
+        )
+        return autoUpdate(repo)
+    return True
+
+def convVersion(ver):
+    splt = ver.split('.')
+    conv = [int(splt[0][1:]), float('.'.join(splt[1:]))]
+    return conv
+
+def updateFinalize(args):
+    root_dir = args['root_dir']
+    zip_file = args['zip_file']
+    time.sleep(1)
+
+    backup_dir = root_dir / f'{version}-backup'
+    if backup_dir.exists():
+        shutil.rmtree(str(backup_dir))
+    os.makedirs(str(backup_dir))
+
+    for item in ['src', 'icons', 'Sibyl.exe']:
+        target = str(root_dir / item)
+        dest = str(backup_dir / item)
+        shutil.move(target, dest)
+    with ZipFile(zip_file) as f:
+        f.extractall()
+    os.remove(zip_file)
+    sp.Popen(str(root_dir / 'Sibyl.exe'), shell=True, stdout=sp.PIPE)
+    # os.system(str(root_dir / 'Sibyl.exe'))
+
+def autoUpdate(repo):
+    if getattr(sys, 'frozen', False):
+        root_dir = Path(sys.executable).parent
+    else:
+        root_dir = Path(__file__).parent.parent
+    assets = repo.get_latest_release().get_assets()[0]
+    assets_url = assets.browser_download_url
+    zip_file = str(root_dir / assets.name)
+    with open(zip_file, 'wb') as f:
+        f.write(requests.get(assets_url).content)
+
+    args = {
+        'root_dir': root_dir,
+        'zip_file': zip_file
+    }
+    p = Process(target=updateFinalize, args=[args])
+    p.start()
+    return False

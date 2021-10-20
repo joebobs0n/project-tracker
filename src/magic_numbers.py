@@ -1,2 +1,2 @@
-version = '1.0.3'
-tic_rate = 24
+version = 'v1.0.4'
+tic_rate = 50

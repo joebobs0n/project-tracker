@@ -2,7 +2,7 @@
 
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import QTimer, QUrl
-from PyQt5.QtWidgets import QErrorMessage, QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
+from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
 import json, os
 from pathlib import Path
 from src.dialogs import SettingsDialog, AddDialog, EditDialog, NewDialog, InputDialog
@@ -41,8 +41,7 @@ class PTApp(QMainWindow):
                         'Sibyl encountered permission issues while writing default_dir.txt in main program root directory.',
                         'Please move program files to a different directory or change the desired directory\'s permissions.'
                     ),
-                    QMessageBox.Critical,
-                    QtGui.QIcon('icons/dialog')
+                    QMessageBox.Critical
                 )
                 self.close()
 
@@ -63,8 +62,7 @@ class PTApp(QMainWindow):
                     'Sibyl encountered permission issues while creating default directories.',
                     'Please restart and choose a different directory or change the desired directory\'s permissions.'
                 ),
-                QMessageBox.Critical,
-                QtGui.QIcon('icons/dialog')
+                QMessageBox.Critical
             )
             os.remove('default_dir.txt')
             self.close()
@@ -75,7 +73,8 @@ class PTApp(QMainWindow):
         self.__updateReport()
 
         self.projects_tree.sortItems(0, 0)
-        self.reportwhen_combo.setCurrentIndex(1)
+        self.reportwhen_combo.setCurrentIndex(0)
+        self.reportwhich_combo.setCurrentIndex(1)
 
     def closeEvent(self, evt):
         if self.__unsaved_changes:
@@ -240,7 +239,7 @@ class PTApp(QMainWindow):
         info = [
             'Framework: PyQt5',
             'Icons: Candy Icons by EliverLara',
-            f'Version: {self.__version}',
+            f'Version: {self.__version[1:]}',
             '',
             'Author: Andy Monk',
             'Email: czech.monk90@gmail.com'

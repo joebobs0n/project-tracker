@@ -8,7 +8,7 @@ def getArgs():
     args = argparse.ArgumentParser(formatter_class=argparse.MetavarTypeHelpFormatter)
     args.add_argument('-d', '--debug', action='store_true', default=False,
                       help='flag to compile with console for debugging')
-    args.add_argument('-u', '--unzipped', action='store_true', default=False,
+    args.add_argument('-z', '--zip', action='store_true', default=False,
                       help='flag to not zip the final files')
     return args.parse_args()
 
@@ -31,11 +31,11 @@ def main():
     if args.debug:
         print('\033[92m-I-\033[0m Creating debug *.bat')
         os.system('echo ".\\Sibyl.exe\npause" > ./dist/sibyl-pause.bat')
-    elif not args.unzipped:
+    elif args.zip:
         print('\033[92m-I-\033[0m Zipping and cleaning up ./dist')
         os.chdir('./dist')
         cmds = [
-            f'zip -r ./sibyl-no-install-v{version}.zip ./icons ./src ./Sibyl.exe',
+            f'zip -r ./sibyl-no-install-v{version}.zip ./*',
             'rm -rf ./icons ./src ./Sibyl.exe'
         ]
         for cmd in cmds:
