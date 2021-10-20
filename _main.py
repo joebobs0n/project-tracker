@@ -6,30 +6,23 @@ r'''
 - Email: czech.monk90@gmail.com
 '''
 
-import multiprocessing as multi
-from PyQt5 import QtWidgets
-from src.mainApp import PTApp
-from pathlib import Path
 import sys, os
-# import qdarkstyle
-
-import src.helpers as helpers
-from src.magic_numbers import version
+from PyQt5 import QtWidgets
+from pathlib import Path
+from src.mainApp import PTApp
+from src.autoUpdate import Updater
+import src.literals as literals
 
 
 if __name__ == '__main__':
-    multi.freeze_support()
-
     os.chdir(Path(__file__).parent)
     app = QtWidgets.QApplication([])
-    # helpers.popup('Zombie Count', str(multi.active_children()), QtWidgets.QMessageBox.Critical)
-    # latest = helpers.checkLatest()
+    isLatest = Updater.checkLatest(literals.gh_repo, literals.gh_token)
 
-    # with open('src/stylesheet.scss', 'r') as f:
-    #     css = f.read()
-    # app.setStyleSheet(css)
-    # if latest:
-    if True:
+    if isLatest:
         win = PTApp()
         win.show()
-    sys.exit(app.exec_())
+        sys.exit(app.exec_())
+    else:
+        app.quit()
+        sys.exit()

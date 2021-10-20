@@ -1,22 +1,22 @@
 #!/usr/bin/python3
 
+import json, os
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
-import json, os
 from pathlib import Path
-from src.dialogs import SettingsDialog, AddDialog, EditDialog, NewDialog, InputDialog
+from src.dialogs import *
 from src.helpers import *
-import datetime as dt
+import src.literals as literals
 from copy import deepcopy
-import src.magic_numbers as magic
+import datetime as dt
 
 
 class PTApp(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__tic_rate = magic.tic_rate
-        self.__version = magic.version
+        self.__tic_rate = literals.tic_rate
+        self.__version = literals.version
 
         default_dir_path = Path('default_dir.txt')
         get_new_default_dir = False
@@ -47,7 +47,7 @@ class PTApp(QMainWindow):
 
         self.__default_dir = Path(self.__default_dir)
 
-        uic.loadUi('src/main.ui', self)
+        uic.loadUi('ui/main.ui', self)
         self.report_browser.setPlaceholderText(' Nothing to report')
 
         try:
@@ -71,10 +71,7 @@ class PTApp(QMainWindow):
         self.__updateDates()
         self.__initTriggers()
         self.__updateReport()
-
-        self.projects_tree.sortItems(0, 0)
-        self.reportwhen_combo.setCurrentIndex(0)
-        self.reportwhich_combo.setCurrentIndex(1)
+        self.__loadSettings()
 
     def closeEvent(self, evt):
         if self.__unsaved_changes:
@@ -551,4 +548,8 @@ class PTApp(QMainWindow):
         if self.__selectedProjObj != None:
             self.__selectedProjObj['todos'] = item_order
 
+    def __loadSettings(self):
+        self.projects_tree.sortItems(0, 0)
+        self.reportwhen_combo.setCurrentIndex(0)
+        self.reportwhich_combo.setCurrentIndex(1)
 

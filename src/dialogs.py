@@ -13,7 +13,7 @@ from src.helpers import getTimeInfo
 class SettingsDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        uic.loadUi('src/settings.ui', self)
+        uic.loadUi('ui/settings.ui', self)
 
     def exec_(self):
         super(SettingsDialog, self).exec_()
@@ -27,7 +27,7 @@ class AddDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        uic.loadUi('src/add_note.ui', self)
+        uic.loadUi('ui/add_note.ui', self)
         placeholdertext = [
             'Multiple notes can be added at a time by using separate lines',
             'Each line is converted to a bulletpoint (except tables and multi-line code blocks)',
@@ -63,7 +63,7 @@ class EditDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        uic.loadUi('src/edit_project.ui', self)
+        uic.loadUi('ui/edit_project.ui', self)
         placeholdertext = [
             'Edit markdown code for the selected project on a given day.',
             '',
@@ -136,7 +136,7 @@ class NewDialog(QDialog):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
         self.__noUpdate = False
-        uic.loadUi('src/new_project.ui', self)
+        uic.loadUi('ui/new_project.ui', self)
         placeholdertext = [
             'Add new project and its corresponding initial todos.',
             'New todo items can be added later.',
@@ -202,7 +202,7 @@ class InputDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        uic.loadUi('src/input.ui', self)
+        uic.loadUi('ui/input.ui', self)
         self.cancel_button.clicked.connect(self.__cancelled)
         self.submit_button.clicked.connect(self.__submit)
 
