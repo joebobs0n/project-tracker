@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import argparse, os, shutil
-from src.literals import version
+import src.literals as literals
 from pathlib import Path
 
 
@@ -51,10 +51,20 @@ def main():
             f.write('Installer.exe\npause')
     elif args.zip:
         print(f'\033[92m-I-\033[0m Zipping and cleaning up {dist_path}')
-        shutil.make_archive(f'Sibyl-{version}', 'zip', str(dist_path))
+        shutil.make_archive(f'Sibyl-{literals.version}', 'zip', str(dist_path))
         shutil.rmtree(str(dist_path))
         os.mkdir(str(dist_path))
-        shutil.move(f'Sibyl-{version}.zip', str(dist_path))
+        shutil.move(f'Sibyl-{literals.version}.zip', str(dist_path))
+
+        print(f'\n\033[92m-I-\033[0m Version Notes:')
+        print_md = [f'# {literals.version}', '']
+        for key, val in literals.version_notes.items():
+            # print_md.extend([f'## {key}', '']')
+            print_md.extend([f'|{key}|Notes|', '|:---|:---|'])
+            for bullet, note in val:
+                print_md.append(f'|{bullet}|{note}|')
+            print_md.append('')
+        print('\n'.join(print_md))
 
 if __name__ == '__main__':
     main()

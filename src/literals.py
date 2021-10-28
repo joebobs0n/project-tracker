@@ -1,23 +1,26 @@
 
 #? [VERSION]
 version = 'v1.1.0'
-features = [
-    ('Installer Added', 'Users can now use an installer to setup (move files and create settings file) their instance of Sibyl.'),
-    ('Undo/Redo', 'Project board history is now tracked and the user can use the undo/redo buttons to traverse the history. Functions as expected.'),
-    ('Check for Updates', 'Sibyl will check for updates upon startup. If minor updates are available, an auto-update will run if accepted by the user. If major updates are available, the user will be informed.'),
-    ('Completed Todos Tracking', 'Completed todo items are now tracked; preparatory for future features.'),
+version_notes = {
+    'Features': [
+        ('Installer Added', 'Users can now use an installer to setup (move files and create settings file) their instance of Sibyl.'),
+        ('Undo/Redo', 'Project board history is now tracked and the user can use the undo/redo buttons to traverse the history. Functions as expected.'),
+        ('Check for Updates', 'Sibyl will check for updates upon startup. If minor updates are available, an auto-update will run if accepted by the user. If major updates are available, the user will be informed.'),
+        ('Completed Todos Tracking', 'Completed todo items are now tracked; preparatory for future features.'),
+        ('Version Notes', 'Running version notes kept in ./docs/version_history.md and is linked in README.md.'),
 
-]
-tweaks = [
-    ('Double Depth Bullets in Notes', 'In add notes, using "-" will create a second depth bullet point with no timestamp'),
-    ('Save File Updater', 'If a save file generated from an older version of Sibyl is loaded, it will be updated to comply with the latest formatting.'),
+    ],
+    'Tweaks': [
+        ('Double Depth Bullets in Notes', 'In add notes, using "-" will create a second depth bullet point with no timestamp'),
+        ('Save File Updater', 'If a save file generated from an older version of Sibyl is loaded, it will be updated to comply with the latest formatting.'),
 
-]
-bug_fixes = [
-    ('Save As Updates Filepath', 'Save As was not updating the file location for save. This has been resolved.'),
-    ('Various Internal Inconsistencies', ''),
+    ],
+    'Bug Fixes': [
+        ('Save As Updates Filepath', 'Save As was not updating the file location for save. This has been resolved.'),
+        ('Various Internal Inconsistencies', ''),
 
-]
+    ]
+}
 
 #? [INSTALLER]
 settings_filename = 'settings.json'
