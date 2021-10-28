@@ -1,3 +1,15 @@
+# v1.1.1
+
+|Features|Notes|
+|:---|:---|
+
+|Tweaks|Notes|
+|:---|:---|
+
+|Bug Fixes|Notes|
+|:---|:---|
+|Cannot Check Version|App does not crash out when version checking is not avaliable. Two cases currently handled: request timeout (15 sec) and github rate limiting.|
+
 # v1.1.0
 
 |Features|Notes|
