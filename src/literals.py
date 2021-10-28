@@ -13,6 +13,9 @@ version_notes = {
     'Tweaks': [
         ('Double Depth Bullets in Notes', 'In add notes, using "-" will create a second depth bullet point with no timestamp'),
         ('Save File Updater', 'If a save file generated from an older version of Sibyl is loaded, it will be updated to comply with the latest formatting.'),
+        ('Added Save Button', 'Save button with placeholder icon added to toolbar.'),
+        ('Added Undo/Redo Buttons', 'Undo and redo buttons with placeholder icons added to toolbar.'),
+        ('Enable/Disable Save', 'Save option through UI is now only available when there are unsaved changes.'),
 
     ],
     'Bug Fixes': [

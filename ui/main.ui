@@ -645,6 +645,8 @@
    </attribute>
    <addaction name="newproject_toolbar"/>
    <addaction name="separator"/>
+   <addaction name="save_toolbar"/>
+   <addaction name="separator"/>
    <addaction name="newnote_toolbar"/>
    <addaction name="editproject_toolbar"/>
    <addaction name="separator"/>
@@ -809,6 +811,18 @@
   <action name="checklatest_menu">
    <property name="text">
     <string>Check for Updates</string>
+   </property>
+  </action>
+  <action name="save_toolbar">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/save.png</normaloff>../icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save [Ctrl+S]</string>
    </property>
   </action>
  </widget>

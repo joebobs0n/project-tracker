@@ -74,6 +74,7 @@ class SibylMain(QMainWindow):
         self.settings_toolbar.triggered.connect(self.__settings)
         self.undo_toolbar.triggered.connect(self.__undo)
         self.redo_toolbar.triggered.connect(self.__redo)
+        self.save_toolbar.triggered.connect(self.__save)
 
         #? --- OTHER TRIGGERS ---------------------------------------------------------------------
         self.addproject_button.clicked.connect(self.__newProject)
@@ -367,8 +368,10 @@ class SibylMain(QMainWindow):
 
         if self.__get('unsaved'):
             self.setWindowTitle(f'• {literals.main_window_title}')
+            self.__setEnabled('save', True)
         else:
             self.setWindowTitle(literals.main_window_title)
+            self.__setEnabled('save', False)
 
         if self.__get('current_filepath') != None:
             pb_name = Path(self.__get('current_filepath'))
@@ -760,6 +763,10 @@ class SibylMain(QMainWindow):
             ],
             'date_to': [
                 self.todate_date
+            ],
+            'save': [
+                self.save_toolbar,
+                self.save_menu
             ]
         }
 
