@@ -40,7 +40,7 @@ undo_hist_on_save = 5
 
 #? [GITHUB]
 gh_repo = 'joebobs0n/project-tracker'
-gh_token = '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'
+gh_token = None
 
 #? [GUI STRINGS]
 main_window_title = 'Sibyl - Project Tracker'
