@@ -155,26 +155,6 @@
           <height>0</height>
          </size>
         </property>
-        <item>
-         <property name="text">
-          <string>1-high</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2-medium</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>3-low</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>4-none</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>

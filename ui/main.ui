@@ -328,6 +328,8 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="checklatest_menu"/>
+    <addaction name="separator"/>
     <addaction name="readme_menu"/>
     <addaction name="github_menu"/>
     <addaction name="separator"/>
@@ -465,8 +467,14 @@
        <property name="headerHidden">
         <bool>false</bool>
        </property>
+       <attribute name="headerCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="headerMinimumSectionSize">
+        <number>70</number>
+       </attribute>
        <attribute name="headerDefaultSectionSize">
-        <number>65</number>
+        <number>70</number>
        </attribute>
        <attribute name="headerHighlightSections">
         <bool>false</bool>
@@ -637,8 +645,13 @@
    </attribute>
    <addaction name="newproject_toolbar"/>
    <addaction name="separator"/>
+   <addaction name="save_toolbar"/>
+   <addaction name="separator"/>
    <addaction name="newnote_toolbar"/>
    <addaction name="editproject_toolbar"/>
+   <addaction name="separator"/>
+   <addaction name="undo_toolbar"/>
+   <addaction name="redo_toolbar"/>
    <addaction name="separator"/>
    <addaction name="settings_toolbar"/>
   </widget>
@@ -681,7 +694,7 @@
   </action>
   <action name="readme_menu">
    <property name="text">
-    <string>ReadMe</string>
+    <string>Documentation</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
@@ -763,6 +776,53 @@
    </property>
    <property name="toolTip">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="undo_toolbar">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/undo.png</normaloff>../icons/undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="toolTip">
+    <string>Undo [Ctrl+Z]</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="redo_toolbar">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/redo.png</normaloff>../icons/redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="toolTip">
+    <string>Redo [Ctrl+Y]</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="checklatest_menu">
+   <property name="text">
+    <string>Check for Updates</string>
+   </property>
+  </action>
+  <action name="save_toolbar">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/save.png</normaloff>../icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save [Ctrl+S]</string>
    </property>
   </action>
  </widget>

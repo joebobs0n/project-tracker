@@ -1,16 +1,11 @@
 import re, datetime
-from PyQt5 import QtGui
-
+import sys
+from typing import Union
+from pathlib import Path
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtGui import QIcon
 
-def convertMarkdown(lines, timestamp):
-    # temp = []
-    # for line in lines:
-    #     l = [x for x in line.replace('//', '#</br>#').split('#')]
-    #     temp.extend(l)
-    # lines = temp
-
-    # lines = [l.split() for l in lines]
+def convertMarkdown(lines: list[str], timestamp: str) -> list[str]:
     ret = []
     i = 0
     while i < len(lines):
@@ -74,21 +69,21 @@ def convertMarkdown(lines, timestamp):
         else:
             line = lines[i]
             line = line.strip()
-            # if line[0] == '*' or line[0] == '-':
-            #     line = f'[{timestamp}] {line[1:].strip()}'
-            # elif line[0] == '!':
             if line[0] == '!':
-                line = line[1:].strip()
+                line = f'- {line[1:].strip()}'
+            elif line[0] == '-':
+                line = f'  - {line[1:].strip()}'
             else:
-                line = f'[{timestamp}] {line}'
-            line = f'- {line}'
+                line = f'- [{timestamp}] {line}'
             i += 1
 
         if line != '':
             ret.append(line)
     return ret
 
-def getTimeInfo(conv_time):
+def getTimeInfo(conv_time: datetime) -> tuple[int, str, str]:
+    # if conv_time == None:
+    #     conv_time = datetime.datetime.now()
     epoch = conv_time - datetime.timedelta(
         hours=conv_time.hour,
         minutes=conv_time.minute,
@@ -96,16 +91,13 @@ def getTimeInfo(conv_time):
         microseconds=conv_time.microsecond
     )
     epoch = epoch.timestamp()
-
-    time = conv_time.strftime('%I:%M%p').lower()
+    time = conv_time.strftime('%I:%M:%S %p').lower()
     if time[0] == '0':
         time = time[1:]
-
     date = f'{conv_time.month}/{conv_time.day}/{conv_time.year}'
-
     return int(epoch), time, date
 
-def popup(title, message, level, icon):
+def popup(root: Path, title: str, message: Union[tuple[str, str], str], level: QMessageBox) -> None:
     if type(message) == tuple:
         text, infotext = message
     else:
@@ -117,5 +109,17 @@ def popup(title, message, level, icon):
     if infotext != None:
         msg.setInformativeText(infotext)
     msg.setWindowTitle(title)
-    msg.setWindowIcon(icon)
-    msg.exec_()
+    icon_path = None
+    print(root)
+    if (root / 'icons/dialog.png').exists():
+        icon_path = root / 'icons/dialog.png'
+    elif (root / 'program_files/icons/dialog.png').exists():
+        icon_path = root / 'program_files/icons/dialog.png'
+    msg.setWindowIcon(QIcon(str(icon_path)))
+    return msg.exec_()
+
+def getRoot(inRoot):
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent
+    else:
+        return Path(__file__).parent if inRoot else Path(__file__).parent.parent

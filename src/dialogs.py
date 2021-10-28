@@ -1,10 +1,14 @@
 #!/usr/bin/python3
 
+import sys
+from typing import Union
 from PyQt5 import uic
 from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import QDialog
 import datetime as dt
-from src.helpers import getTimeInfo
+from src.helpers import getTimeInfo, getRoot
+import src.literals as literals
+from pathlib import Path
 
 
 #* --- SETTINGS -----------------------------------------------------------------------------------
@@ -13,21 +17,23 @@ from src.helpers import getTimeInfo
 class SettingsDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        uic.loadUi('src/settings.ui', self)
+        root = getRoot(False)
+        uic.loadUi(str(root / 'ui/settings.ui'), self)
 
-    def exec_(self):
+    def exec_(self) -> None:
         super(SettingsDialog, self).exec_()
-        return 'settings dialog closed'
+        # return 'settings dialog closed'
 
 
 #* --- ADD NOTE TO SELECTED PROJECT ---------------------------------------------------------------
 #* ------------------------------------------------------------------------------------------------
 
 class AddDialog(QDialog):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        uic.loadUi('src/add_note.ui', self)
+        root = getRoot(False)
+        uic.loadUi(str(root / 'ui/add_note.ui'), self)
         placeholdertext = [
             'Multiple notes can be added at a time by using separate lines',
             'Each line is converted to a bulletpoint (except tables and multi-line code blocks)',
@@ -39,16 +45,16 @@ class AddDialog(QDialog):
         self.submit_button.clicked.connect(self.__submit)
         self.note_tedit.setFocus()
 
-    def setup(self, current_pb, selected_proj):
+    def setup(self, current_pb: dict, selected_proj: str) -> None:
         self.__current_pb = current_pb
         self.projselect_combo.addItems(list(self.__current_pb['projects'].keys()))
         self.projselect_combo.setCurrentText(selected_proj)
 
-    def __submit(self):
+    def __submit(self) -> None:
         self.__submitContents = True
         self.close()
 
-    def exec_(self):
+    def exec_(self) -> tuple[Union[None, str], list[str]]:
         super(AddDialog, self).exec_()
         if self.__submitContents:
             return self.projselect_combo.currentText(), [l for l in self.note_tedit.toPlainText().split('\n')]
@@ -63,7 +69,8 @@ class EditDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        uic.loadUi('src/edit_project.ui', self)
+        root = getRoot(False)
+        uic.loadUi(str(root / 'ui/edit_project.ui'), self)
         placeholdertext = [
             'Edit markdown code for the selected project on a given day.',
             '',
@@ -73,17 +80,19 @@ class EditDialog(QDialog):
         self.edit_tedit.setPlaceholderText('\n'.join(placeholdertext))
         self.edit_tedit.setFocus()
         self.edit_tedit.setEnabled(False)
+        self.priority_combo.addItems(literals.priority_levels[1:])
 
         today = dt.date.today()
         self.date_date.setMaximumDate(today)
         self.date_date.setDate(today)
 
-    def setup(self, current_pb, selected_proj):
+    def setup(self, current_pb: dict, selected_proj: str) -> None:
         self.__current_pb = current_pb
         self.projselect_combo.addItems(list(self.__current_pb['projects'].keys()))
         self.projselect_combo.setCurrentText(selected_proj)
         self.name_edit.setText(selected_proj)
-        self.priority_combo.setCurrentText(self.__current_pb['projects'][selected_proj]['priority'])
+        priority_str = literals.priority_levels[self.__current_pb['projects'][selected_proj]['priority']]
+        self.priority_combo.setCurrentText(priority_str)
 
         self.submit_button.clicked.connect(self.__submit)
         self.projselect_combo.currentTextChanged.connect(self.__update)
@@ -91,14 +100,16 @@ class EditDialog(QDialog):
 
         self.__update()
 
-    def __update(self):
-        self.name_edit.setText(self.projselect_combo.currentText())
-        self.priority_combo.setCurrentText(self.__current_pb['projects'][self.projselect_combo.currentText()]['priority'])
+    def __update(self) -> None:
+        selected_proj = self.projselect_combo.currentText()
+        self.name_edit.setText(selected_proj)
+        priority_str = literals.priority_levels[self.__current_pb['projects'][selected_proj]['priority']]
+        self.priority_combo.setCurrentText(priority_str)
 
         epoch, *_ = getTimeInfo(self.date_date.dateTime().toPyDateTime())
         epoch = str(epoch)
         proj_reports = self.__current_pb['projects'][self.projselect_combo.currentText()]['reports']
-        if epoch in proj_reports.keys():
+        if proj_reports != None and epoch in proj_reports.keys():
             self.edit_tedit.setEnabled(True)
             self.edit_tedit.setFocus()
             self.edit_tedit.setPlainText('\n\n'.join(proj_reports[epoch]))
@@ -107,15 +118,15 @@ class EditDialog(QDialog):
             self.name_edit.setFocus()
             self.edit_tedit.clear()
 
-    def __submit(self):
+    def __submit(self) -> None:
         self.__submitContents = True
         self.close()
 
-    def exec_(self):
+    def exec_(self) -> tuple[str, str, Union[None, str], str, list[str]]:
         super(EditDialog, self).exec_()
         if self.__submitContents:
             name = self.name_edit.text()
-            priority = self.priority_combo.currentText()
+            priority = literals.priority_levels.index(self.priority_combo.currentText())
             proj = self.projselect_combo.currentText()
             date, *_ = getTimeInfo(self.date_date.dateTime().toPyDateTime())
             date = str(date)
@@ -136,7 +147,8 @@ class NewDialog(QDialog):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
         self.__noUpdate = False
-        uic.loadUi('src/new_project.ui', self)
+        root = getRoot(False)
+        uic.loadUi(str(root / 'ui/new_project.ui'), self)
         placeholdertext = [
             'Add new project and its corresponding initial todos.',
             'New todo items can be added later.',
@@ -158,12 +170,12 @@ class NewDialog(QDialog):
         self.template_combo.currentIndexChanged.connect(self.__update)
         self.details_tedit.setFocus()
 
-    def setup(self, current_pb):
+    def setup(self, current_pb: dict) -> None:
         self.__current_pb = current_pb
         self.template_combo.addItems(list(self.__current_pb['templates'].keys()))
         self.__update()
 
-    def __addTemplate(self):
+    def __addTemplate(self) -> None:
         if self.details_tedit.toPlainText() != '':
             template = InputDialog()
             template.which('Template Name')
@@ -174,7 +186,7 @@ class NewDialog(QDialog):
             self.__noUpdate = True
             self.template_combo.setCurrentText(tname)
 
-    def __update(self):
+    def __update(self) -> None:
         if self.__noUpdate:
             self.__noUpdate = False
             return
@@ -183,11 +195,11 @@ class NewDialog(QDialog):
         if cselection != '':
             self.details_tedit.setText(self.__current_pb['templates'][cselection])
 
-    def __submit(self):
+    def __submit(self) -> None:
         self.__submitContents = True
         self.close()
 
-    def exec_(self):
+    def exec_(self) -> str:
         super(NewDialog, self).exec_()
         if self.__submitContents:
             return self.details_tedit.toPlainText()
@@ -202,22 +214,23 @@ class InputDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        uic.loadUi('src/input.ui', self)
+        root = getRoot(False)
+        uic.loadUi(str(root / 'ui/input.ui'), self)
         self.cancel_button.clicked.connect(self.__cancelled)
         self.submit_button.clicked.connect(self.__submit)
 
-    def __submit(self):
+    def __submit(self) -> None:
         self.__submitContents = True
         self.close()
 
-    def __cancelled(self):
+    def __cancelled(self) -> None:
         self.input_ledit.clear()
         self.close()
 
-    def which(self, text):
+    def which(self, text: str) -> None:
         self.setWindowTitle(text)
 
-    def exec_(self):
+    def exec_(self) -> str:
         super(InputDialog, self).exec_()
         if self.__submitContents:
             return self.input_ledit.text()
