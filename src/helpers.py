@@ -1,12 +1,11 @@
-import re, datetime, shutil, os, requests, time, sys
+import re, datetime
+import sys
+from typing import Union
+from pathlib import Path
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QIcon
-from multiprocessing import Process
-from src.literals import version
-from pathlib import Path
-from zipfile import ZipFile
 
-def convertMarkdown(lines, timestamp):
+def convertMarkdown(lines: list[str], timestamp: str) -> list[str]:
     ret = []
     i = 0
     while i < len(lines):
@@ -70,21 +69,21 @@ def convertMarkdown(lines, timestamp):
         else:
             line = lines[i]
             line = line.strip()
-            # if line[0] == '*' or line[0] == '-':
-            #     line = f'[{timestamp}] {line[1:].strip()}'
-            # elif line[0] == '!':
             if line[0] == '!':
-                line = line[1:].strip()
+                line = f'- {line[1:].strip()}'
+            elif line[0] == '-':
+                line = f'  - {line[1:].strip()}'
             else:
-                line = f'[{timestamp}] {line}'
-            line = f'- {line}'
+                line = f'- [{timestamp}] {line}'
             i += 1
 
         if line != '':
             ret.append(line)
     return ret
 
-def getTimeInfo(conv_time):
+def getTimeInfo(conv_time: datetime) -> tuple[int, str, str]:
+    # if conv_time == None:
+    #     conv_time = datetime.datetime.now()
     epoch = conv_time - datetime.timedelta(
         hours=conv_time.hour,
         minutes=conv_time.minute,
@@ -92,16 +91,13 @@ def getTimeInfo(conv_time):
         microseconds=conv_time.microsecond
     )
     epoch = epoch.timestamp()
-
     time = conv_time.strftime('%I:%M:%S %p').lower()
     if time[0] == '0':
         time = time[1:]
-
     date = f'{conv_time.month}/{conv_time.day}/{conv_time.year}'
-
     return int(epoch), time, date
 
-def popup(title, message, level):
+def popup(root: Path, title: str, message: Union[tuple[str, str], str], level: QMessageBox) -> None:
     if type(message) == tuple:
         text, infotext = message
     else:
@@ -113,43 +109,17 @@ def popup(title, message, level):
     if infotext != None:
         msg.setInformativeText(infotext)
     msg.setWindowTitle(title)
-    msg.setWindowIcon(QIcon('icons/dialog.png'))
-    msg.exec_()
+    icon_path = None
+    print(root)
+    if (root / 'icons/dialog.png').exists():
+        icon_path = root / 'icons/dialog.png'
+    elif (root / 'program_files/icons/dialog.png').exists():
+        icon_path = root / 'program_files/icons/dialog.png'
+    msg.setWindowIcon(QIcon(str(icon_path)))
+    return msg.exec_()
 
-def updateFinalize(args):
-    root_dir = args['root_dir']
-    zip_file = args['zip_file']
-    time.sleep(1)
-
-    backup_dir = root_dir / f'{version}-backup'
-    if backup_dir.exists():
-        shutil.rmtree(str(backup_dir))
-    os.makedirs(str(backup_dir))
-
-    for item in ['src', 'icons', 'Sibyl.exe']:
-        target = str(root_dir / item)
-        dest = str(backup_dir / item)
-        shutil.move(target, dest)
-    with ZipFile(zip_file) as f:
-        f.extractall()
-    os.remove(zip_file)
-    os.system(str(root_dir / 'Sibyl.exe'))
-
-def autoUpdate(repo):
+def getRoot(inRoot):
     if getattr(sys, 'frozen', False):
-        root_dir = Path(sys.executable).parent
+        return Path(sys.executable).parent
     else:
-        root_dir = Path(__file__).parent.parent
-    assets = repo.get_latest_release().get_assets()[0]
-    assets_url = assets.browser_download_url
-    zip_file = str(root_dir / assets.name)
-    with open(zip_file, 'wb') as f:
-        f.write(requests.get(assets_url).content)
-
-    args = {
-        'root_dir': root_dir,
-        'zip_file': zip_file
-    }
-    p = Process(target=updateFinalize, args=[args])
-    p.start()
-    return False
+        return Path(__file__).parent if inRoot else Path(__file__).parent.parent

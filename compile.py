@@ -3,7 +3,6 @@
 import argparse, os, shutil
 from src.literals import version
 from pathlib import Path
-from glob import glob
 
 
 def getArgs():
@@ -30,7 +29,8 @@ def main():
     installer_ico_path = icons_path / 'installer.ico'
     installer_bat_path = dist_path / 'installer-debugger.bat'
 
-    shutil.rmtree(str(dist_path))
+    if dist_path.exists():
+        shutil.rmtree(str(dist_path))
     debug = '' if args.debug else '--windowed '
     print(f'\033[92m-I-\033[0m Creating Sibyl.exe')
     os.system(f'pyinstaller.exe --onefile {debug}--name Sibyl --icon {main_ico_path} {main_path}')

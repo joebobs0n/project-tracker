@@ -32,7 +32,7 @@
 
 ## Motivation
 
-In my day to day, I have many of projects that I _could_ be working on and that I would often _love_ to be working on, however, I also have a terrible memory. This has led me to search for and try just about every major (and some not so major) project/todo tracker softwares over the years. A few of these include:
+In my day to day, I have many projects that I _could_ be working on and that I would often _love_ to be working on, however, I also have a terrible memory. This has led me to search for and try just about every major (and some not so major) project/todo tracker solutions over the years. A few of these include:
 
 - [Monday](https://monday.com/)
 - [Jura](https://www.atlassian.com/software/jira)
@@ -45,9 +45,9 @@ In my day to day, I have many of projects that I _could_ be working on and that 
 - [MySQL Workbench](https://www.mysql.com/products/workbench/)
 - and many others...
 
-By trying so many different solutions to the same problem (help track projects) is that many of these pieces of software often forget to support me and instead demand that I support them. What I mean by this is that I ended up spending more time configuring and using the software (often getting frustrated in the process) rather than having the software help me in any way.
+By trying so many different solutions to the same problem (help track projects), I have found that many available products often forget to support me and instead demand that I support them. What I mean by this is that I ended up spending more time configuring and using the software (often getting frustrated in the process) rather than having the software help me in any meaningful way.
 
-While these resources above are very powerful in their own right, I feel that in most cases, with the obvious exceptions, in order to implement fancy, more robust features, the basic ones would get unnecessarily complicated. This led to fatigue and eventual loss of interest in a given project due to all of my energy went toward fighting an unnecessary battle instead of into working.
+While these resources above are very powerful in their own right, I feel that in most cases, with the obvious exceptions, in order to implement fancy, more robust features, the basic ones often get unnecessarily complicated. This led to fatigue and eventual loss of interest in a given project due to all of my energy going toward fighting an unnecessary battle instead of into working.
 
 ## Solution
 
@@ -59,7 +59,7 @@ Since I am opinionated enough on the subject and masquerade as someone that can 
 
 Sibyl is meant to streamline project tracking by allowing the user to:
 
-1. create projects with varying levels of priority (priority level currently does nothing more than help sorting but other features are planned)
+1. create projects with varying levels of priority (priority level currently does nothing more than help sort in the project column but other features are planned)
 2. add/remove/complete todo items pertaining to the selected project
 3. add notes and/or documentation to a given project
 4. edit project details (e.g. name, priority, and notes/documentation)
@@ -67,7 +67,7 @@ Sibyl is meant to streamline project tracking by allowing the user to:
 
 As I said in the intro, I have a terrible memory. The basic set of features here allow a user to track multiple projects, the projects' todo items, and view what has been done/documented. This helps me remember what projects there are, what I've done, and what needs to be done.
 
-This major version of Sibyl is developed to only work on Windows. Currently there are plans to make another major version that moves away from `PyQt5` to `Node` and `Electron` which has better capabilities to support other operating systems (Windows, MacOS, Linux, Android, iOS).
+This major version of Sibyl (`v1.*.*`) is developed to only work on Windows. Currently there are plans to make another major version (`v.2.*.*`) that moves away from `PyQt5` to `Node`/`Electron` which has better capabilities to support other operating systems (Windows, MacOS, Linux, Android, iOS).
 
 Also, it may be a little meta, but I am using Sibyl to track my progress/todo items for Sibyl (shown above). What better test case? If you want, you can read all of the todo items for this project to see what features may be coming in the future, but I make no promises.
 
@@ -75,7 +75,7 @@ Also, it may be a little meta, but I am using Sibyl to track my progress/todo it
 
 Currently, there are two different ways of "installing" Sibyl:
 
-- downloading and extracting the `sibyl-no-install-v*.zip`: quick, easy, and recommended.
+- downloading and installing the `Sibyl-v*.zip`: quick, easy, and recommended.
 - compiling from source: if you don't like how I did something and can navigate my spaghetti code to make the fix, this is your solution.
 
 ## Recommended
