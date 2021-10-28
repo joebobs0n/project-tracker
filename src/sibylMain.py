@@ -22,7 +22,7 @@ class SibylMain(QMainWindow):
         self.__clearAll()
         self.__updateDates()
         self.__initTriggers()
-        # self.__updateReport()
+        self.__updateReport()
 
     def __initVars(self) -> None:
         root = helpers.getRoot(False)

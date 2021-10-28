@@ -6,7 +6,8 @@ r'''
 - Email: czech.monk90@gmail.com
 '''
 
-import sys, shutil, os
+import sys, shutil, os, urllib3, requests, github
+from PyQt5.QtGui import QIcon
 from PyQt5 import QtWidgets
 from src.sibylMain import SibylMain
 from src.autoUpdate import Updater
@@ -16,7 +17,24 @@ from src.helpers import getRoot
 
 def main():
     app = QtWidgets.QApplication([])
-    if Updater.checkLatest(literals.gh_repo, literals.gh_token):
+    try:
+        isLatest = Updater.checkLatest(literals.gh_repo, literals.gh_token)
+    except (urllib3.exceptions.MaxRetryError, requests.exceptions.ConnectTimeout):
+        isLatest = 'timeout'
+    except github.GithubException:
+        isLatest = 'gh_ratelimit'
+
+    if type(isLatest) == str:
+        warning = QtWidgets.QMessageBox(
+            QtWidgets.QMessageBox.Warning,
+            'Latest Check Failed',
+            f'Failed to check for newer Sibyl version. Fail code: {isLatest}',
+            parent=None
+        )
+        warning.setWindowIcon(QIcon(str(getRoot(True) / 'icons/dialog.png')))
+        warning.exec_()
+
+    if isLatest:
         root = getRoot(True)
         if not (root / 'installer').exists():
             os.mkdir(str(root / 'installer'))
