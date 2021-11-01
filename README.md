@@ -106,7 +106,7 @@ Upon running Sibyl for the first time, you may receive a big blue box from Windo
 
 # UI Tour
 
-The following UI tour was written for version 1.0.3. As such, there may be additional functionality or slight differences between the newest version and the one shown below. For the version reports, see [version history](docs/version_history.md).
+The following UI tour was written for version 1.0.3. As such, there may be additional functionality or slight differences between the newest version and the one shown below. For the version reports, see the [releases page](https://github.com/joebobs0n/project-tracker/releases).
 
 ## Main Window
 
