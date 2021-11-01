@@ -807,14 +807,26 @@ class SibylMain(QMainWindow):
         updated = deepcopy(save_pb)
 
         #? --- FILL OUT MISSING PROJECT BOARD SECTIONS --------------------------------------------
-        for key, val in literals.empty_pb.items():
-            if key not in updated.keys():
-                updated[key] = val
-
+        updated = self.__fillProjectBoardKeys(updated)
+        updated = self.__fillProjectKeys(updated)
         updated = self.__convertPriority(updated)
         updated = self.__sortByPriority(updated)
 
         return updated
+
+    def __fillProjectBoardKeys(self, board: dict) -> dict:
+        for key, val in literals.empty_pb.items():
+            if key not in board.keys():
+                board[key] = val
+        return board
+
+    def __fillProjectKeys(self, board: dict) -> dict:
+        for section in ['projects', 'completed', 'archived']:
+            for proj in board[section].keys():
+                for key, val in literals.empty_project.items():
+                    if key not in board[section][proj].keys():
+                        board[section][proj][key] = val
+        return board
 
     def __convertPriority(self, board: dict) -> dict:
         for section in ['projects', 'completed', 'archived']:

@@ -1,6 +1,6 @@
 
 #? [VERSION]
-version = 'v1.1.3'
+version = 'v1.1.4'
 version_notes = {
     'Feature': [
 
@@ -9,7 +9,7 @@ version_notes = {
 
     ],
     'Bug Fix': [
-        ('Saves Being Moved to Backup', 'Fixed a bug where save files (project board files) were being moved to the version backup directory upon auto-update if the user opted to use the same directory for install and default save.'),
+        ('Completing Todo Cased Crash', 'Completing a todo item for a project started on an older version of Sibyl caused a crash. This was caused by the project board not having the "completed_todos" section for the project. Resolved by adding a project keys filler in the update save file method.'),
 
     ]
 }
