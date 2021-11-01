@@ -169,7 +169,7 @@ def performInstall(install_dir: str, default_dir: str) -> None:
     if backup_path.exists():
         shutil.rmtree(str(backup_path))
 
-    move_items = [l for l in install_path.iterdir() if l.name not in literals.ignore_backup]
+    move_items = [l for l in install_path.iterdir() if l.name in literals.backup]
     if move_items != []:
         os.mkdir(str(backup_path))
     for item in move_items:

@@ -1,32 +1,25 @@
 
 #? [VERSION]
-version = 'v1.1.1'
+version = 'v1.1.3'
 version_notes = {
     'Feature': [
 
     ],
     'Tweak': [
-        ('Version Notes Readability', 'Features, tweaks, and bug fixes compiled into single table for readability. Empty sections are no longer included.'),
-        ('Auto Updater Clean Up', 'Auto updater now cleans up after itself.'),
-        ('Auto Update Prompt Display New Version', 'When prompting the user if they want to install the newest version, said version is displayed.'),
-        ('Main Script Name Change', 'Changed main script name from _main to Sibyl for clarity.'),
-        ('Moved Github Token Home', 'Moved Github token from literals (committed file) to user\'s settings.json (non-committed file) and added appropriate existence checkers.'),
-        ('Using Subprocess to Auto Launch', 'Using subprocess.Popen instead of os.system to call other executables to suppress visible console.'),
 
     ],
     'Bug Fix': [
-        ('Auto Update Crashing', 'Fixed a bug where the auto updater was crashing while updating. Cause was bad python->shell commands.'),
+        ('Saves Being Moved to Backup', 'Fixed a bug where save files (project board files) were being moved to the version backup directory upon auto-update if the user opted to use the same directory for install and default save.'),
 
     ]
 }
 
 #? [INSTALLER]
 settings_filename = 'settings.json'
-ignore_backup = [
-    'Installer.exe',
-    'program_files',
-    'settings.json',
-    'temp'
+backup = [
+    'Sibyl.exe',
+    'icons',
+    'ui'
 ]
 installer_cleanup = [
     'Installer.exe',

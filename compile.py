@@ -57,7 +57,7 @@ def main():
         shutil.move(f'Sibyl-{literals.version}.zip', str(dist_path))
 
         print(f'\n\033[92m-I-\033[0m Version Notes:')
-        print_md = [f'# {literals.version}', '', '|Type|Fix|Notes|', '|:---|:---|:---|']
+        print_md = [f'|Type|Fix|Notes|', '|:---|:---|:---|']
         for key, val in literals.version_notes.items():
             if len(val) > 0:
                 for bullet, note in val:
