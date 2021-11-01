@@ -1,6 +1,7 @@
-import sys, requests, shutil, os
-from PyQt5.QtGui import QIcon
+import requests, shutil, os, stat
 import src.helpers as helpers
+import subprocess as sp
+from PyQt5.QtGui import QIcon
 from src.literals import version
 from PyQt5.QtWidgets import QMessageBox, QWidget
 from github import Github
@@ -35,7 +36,7 @@ class Updater:
             confirm = QMessageBox(
                 QMessageBox.Warning,
                 'New Minor Version Available',
-                'Do you want to install this version?',
+                f'Would you like to install version {ver[1:]}?',
                 QMessageBox.Ok | QMessageBox.Cancel,
                 None
             )
@@ -63,6 +64,11 @@ class Updater:
         with open(zip_file, 'wb') as f:
             f.write(requests.get(assets_url).content)
         shutil.unpack_archive(str(zip_file), str(root_dir))
-        os.system(str(root_dir / 'Installer.exe'))
+        if not (root_dir / 'zipfile').exists():
+            os.mkdir(str(root_dir / 'zipfile'))
+        shutil.move(zip_file, str(root_dir / 'zipfile' / assets.name))
+        if (root_dir / 'installer').exists():
+            shutil.rmtree(str(root_dir / 'installer'),
+                          onerror=lambda func, path, _: (os.chmod(path, stat.S_IWRITE), func(path)))
+        sp.call(str(root_dir / 'Installer.exe').split(' '), shell=True)
         return False
-

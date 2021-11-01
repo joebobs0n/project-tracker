@@ -123,3 +123,9 @@ def getRoot(inRoot):
         return Path(sys.executable).parent
     else:
         return Path(__file__).parent if inRoot else Path(__file__).parent.parent
+
+def retrieve(data, key):
+    try:
+        return data[key]
+    except KeyError:
+        return None

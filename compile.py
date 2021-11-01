@@ -22,7 +22,7 @@ def main():
     dist_ui_path = dist_files_path / 'ui'
     icons_path = proj_root_path / 'icons'
     dist_icons_path = dist_files_path / 'icons'
-    main_path = proj_root_path / '_main.py'
+    main_path = proj_root_path / 'Sibyl.py'
     main_ico_path = icons_path / 'main.ico'
     main_bat_path = dist_files_path / 'sibyl-debugger.bat'
     installer_path = proj_root_path / 'installer.py'
@@ -57,13 +57,11 @@ def main():
         shutil.move(f'Sibyl-{literals.version}.zip', str(dist_path))
 
         print(f'\n\033[92m-I-\033[0m Version Notes:')
-        print_md = [f'# {literals.version}', '']
+        print_md = [f'# {literals.version}', '', '|Type|Fix|Notes|', '|:---|:---|:---|']
         for key, val in literals.version_notes.items():
-            # print_md.extend([f'## {key}', '']')
-            print_md.extend([f'|{key}|Notes|', '|:---|:---|'])
-            for bullet, note in val:
-                print_md.append(f'|{bullet}|{note}|')
-            print_md.append('')
+            if len(val) > 0:
+                for bullet, note in val:
+                    print_md.append(f'|{key}|{bullet}|{note}|')
         print('\n'.join(print_md))
 
 if __name__ == '__main__':
