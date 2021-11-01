@@ -265,7 +265,7 @@ class SibylMain(QMainWindow):
             with open(data[0], 'w') as f:
                 f.write(json.dumps(self.__get('current_proj_board'), indent=4))
             stop_idx = self.__get('current_board_index') + 1
-            start_idx = stop_idx - literals.undo_hist_on_save
+            start_idx = stop_idx - literals.hist_len_on_save
             if start_idx < 0:
                 start_idx = 0
             new_index = self.__get('current_board_index') - start_idx

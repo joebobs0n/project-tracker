@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import *
 from pathlib import Path
 from src.helpers import popup, getRoot
 import src.literals as literals
+import subprocess as sp
 
 
 class InstallerApp(QMainWindow):
@@ -203,9 +204,10 @@ def main() -> None:
             settings = json.load(f)
         performInstall(settings['install_dir'], settings['default_dir'])
         app.quit()
-        os.system(f'{settings["install_dir"]}/Sibyl.exe')
+        exe_path = Path(settings['install_dir']) / 'Sibyl.exe'
+        sp.call(str(exe_path).split(' '), shell=True)
         sys.exit()
 
 if __name__ == '__main__':
-    # time.sleep(0.5)
+    time.sleep(0.5)
     main()
