@@ -1,15 +1,16 @@
 
 #? [VERSION]
-version = 'v1.2.1'
+version = 'v1.2.2'
 version_notes = {
     'Feature': [
 
     ],
     'Tweak': [
+        ('Current Filepath now Path', 'Changed the internal variable storing the current filepath from string to Path object. Changed interracting code accordingly.'),
 
     ],
     'Bug Fix': [
-        ('Backup Collision', 'When Sibyl auto updates, a backup directory containing the previously installed version\'s app files is created. This directory was creating a name collision with the backup file used for restoring a session. This has been resolved by renaming both offenders to "previous_version" and "backup.json", respectively.'),
+        ('README Typos', 'Corrected typos in the README documentation.'),
 
     ]
 }
@@ -38,7 +39,8 @@ gh_token = None
 vars_serialize = {
     'path': [
         'root_path',
-        'settings_path'
+        'settings_path',
+        'current_filepath'
     ],
     'ignore': [
         'date'
@@ -57,7 +59,8 @@ priority_levels = [
     'high',
     'medium',
     'low',
-    'none'
+    'none',
+    'complete'
 ]
 empty_project = {
     'priority':         None,

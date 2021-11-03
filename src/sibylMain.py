@@ -280,7 +280,7 @@ class SibylMain(QMainWindow):
 
         elif action == 'save_project_board':
             with open(data[0], 'w') as f:
-                f.write(json.dumps(self.__get('current_proj_board'), indent=4))
+                f.write(json.dumps(self.__get('current_proj_board'), indent=literals.tab_width))
             stop_idx = self.__get('current_board_index') + 1
             start_idx = stop_idx - literals.hist_len_on_save
             if start_idx < 0:
@@ -391,8 +391,9 @@ class SibylMain(QMainWindow):
             self.__setEnabled('save', False)
 
         if self.__get('current_filepath') != None:
-            pb_name = Path(self.__get('current_filepath'))
-            pb_name = pb_name.name.replace(pb_name.suffix, '')
+            # pb_name = Path(self.__get('current_filepath'))
+            # pb_name = pb_name.stem
+            pb_name = self.__get('current_filepath').stem
         elif self.__get('current_filepath') == None and self.__get('unsaved'):
             pb_name = 'New Board'
         else:
@@ -454,7 +455,7 @@ class SibylMain(QMainWindow):
             )
             load_filepath = Path(load_filename)
             if load_filepath.exists() and load_filepath.is_file():
-                self.__set('current_filepath', load_filename)
+                self.__set('current_filepath', load_filepath)
                 self.__openProjectBoard()
             elif load_filename != '':
                 QMessageBox.warning(
@@ -740,7 +741,7 @@ class SibylMain(QMainWindow):
 
     def __saveProjectBoard(self, savepath: str) -> bool:
         if savepath != '':
-            self.__set('current_filepath', savepath)
+            self.__set('current_filepath', Path(savepath))
             self.__set('save_project_board', savepath)
             self.__statusMessage(f'Saved as {savepath}')
         else:
@@ -797,7 +798,11 @@ class SibylMain(QMainWindow):
             if type(obj['priority']) == str:
                 qitem.setText(0, obj['priority'])
             else:
-                priority_text = f'{obj["priority"]}-{literals.priority_levels[obj["priority"]]}'
+                priority = obj['priority']
+                if priority != 0:
+                    priority_text = f'{priority}-{literals.priority_levels[obj["priority"]]}'
+                else:
+                    priority_text = ''
                 qitem.setText(0, priority_text)
             qitem.setText(1, name)
             if name == sel:
