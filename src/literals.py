@@ -1,6 +1,6 @@
 
 #? [VERSION]
-version = 'v1.1.5'
+version = 'v1.2.0'
 version_notes = {
     'Feature': [
         ('Crash Reporting', 'Upon crashing, Sibyl creates a crash report and informs the user of its existence. The user at this point can leave an issues ticket on the Github or contact the dev team.'),
