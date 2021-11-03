@@ -165,7 +165,7 @@ def performInstall(install_dir: str, default_dir: str) -> None:
         except PermissionError as e:
             criticalPopup('default saves', default_dir)
             raise e
-    backup_path = install_path / 'backup'
+    backup_path = install_path / literals.ver_backup_folder
     if backup_path.exists():
         shutil.rmtree(str(backup_path))
 
