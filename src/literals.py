@@ -1,22 +1,25 @@
 
 #? [VERSION]
-version = 'v1.1.4'
+version = 'v1.1.5'
 version_notes = {
     'Feature': [
+        ('Crash Reporting', 'Upon crashing, Sibyl creates a crash report and informs the user of its existence. The user at this point can leave an issues ticket on the Github or contact the dev team.'),
+        ('Backup', 'Sibyl automatically creates a backup in the unfortunate case where it closes unexpectedly (crash, "end task" in task manager, "force close" upon restart/shut down, etc). If a backup is found upon booting Sibyl, the user will be prompted if they want to use it. Should they decline, the backup is overwritten.'),
 
     ],
     'Tweak': [
+        ('New Icons', 'New icons have been added. More or less placeholder until more time can be invested into UI design.'),
 
     ],
     'Bug Fix': [
-        ('Completing Todo Cased Crash', 'Completing a todo item for a project started on an older version of Sibyl caused a crash. This was caused by the project board not having the "completed_todos" section for the project. Resolved by adding a project keys filler in the update save file method.'),
+        ('Get Root Getting Wrong Path', 'The getRoot function was returning the wrong path because the function lives in the helpers file (in src) and would return its parent even when called from a script in the root directory.'),
 
     ]
 }
 
 #? [INSTALLER]
 settings_filename = 'settings.json'
-backup = [
+ver_backup = [
     'Sibyl.exe',
     'icons',
     'ui'
@@ -28,11 +31,21 @@ installer_cleanup = [
 ]
 
 #? [RUNTIME]
+backup_filename = 'backup'
 tic_rate = 50
 tab_width = 4
 hist_len_on_save = 5
 gh_repo = 'joebobs0n/project-tracker'
 gh_token = None
+vars_serialize = {
+    'path': [
+        'root_path',
+        'settings_path'
+    ],
+    'ignore': [
+        'date'
+    ]
+}
 
 #? [GUI STRINGS]
 main_window_title = 'Sibyl - Project Tracker'

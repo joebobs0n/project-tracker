@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from pathlib import Path
-from src.helpers import popup, getRoot
+import src.helpers as helpers
 import src.literals as literals
 import subprocess as sp
 
@@ -137,8 +137,8 @@ class InstallerApp(QMainWindow):
 
 
 def criticalPopup(which: str, dir: Path) -> None:
-    popup(
-        getRoot(True),
+    helpers.popup(
+        helpers.getRoot(),
         'Permission Error',
         (
             f'The installer was unable to write to {dir}.',
@@ -148,7 +148,7 @@ def criticalPopup(which: str, dir: Path) -> None:
     )
 
 def performInstall(install_dir: str, default_dir: str) -> None:
-    installer_root = getRoot(True)
+    installer_root = helpers.getRoot()
     program_files_dir = installer_root / 'program_files'
 
     install_path = Path(install_dir)
@@ -169,7 +169,7 @@ def performInstall(install_dir: str, default_dir: str) -> None:
     if backup_path.exists():
         shutil.rmtree(str(backup_path))
 
-    move_items = [l for l in install_path.iterdir() if l.name in literals.backup]
+    move_items = [l for l in install_path.iterdir() if l.name in literals.ver_backup]
     if move_items != []:
         os.mkdir(str(backup_path))
     for item in move_items:
@@ -193,7 +193,7 @@ def performInstall(install_dir: str, default_dir: str) -> None:
         f.write(json.dumps(settings, indent=literals.tab_width))
 
 def main() -> None:
-    root = getRoot(True)
+    root = helpers.getRoot()
     app = QtWidgets.QApplication([])
     if not (root / literals.settings_filename).exists():
         win = InstallerApp()

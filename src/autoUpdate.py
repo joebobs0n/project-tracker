@@ -3,7 +3,7 @@ import src.helpers as helpers
 import subprocess as sp
 from PyQt5.QtGui import QIcon
 from src.literals import version
-from PyQt5.QtWidgets import QMessageBox, QWidget
+from PyQt5.QtWidgets import QMessageBox
 from github import Github
 from pathlib import Path
 
@@ -14,7 +14,7 @@ class Updater:
 
     @classmethod
     def checkLatest(cls, github_repo: str, token: str) -> bool:
-        root_dir = helpers.getRoot(False)
+        root_dir = helpers.getRoot()
         gh = Github(login_or_token=token)
         repo = gh.get_repo(github_repo)
         ver = list(repo.get_tags())[0].name
