@@ -6,7 +6,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import QDialog
 import datetime as dt
-from src.helpers import getTimeInfo, getRoot
+import src.helpers as helpers
 import src.literals as literals
 from pathlib import Path
 
@@ -17,7 +17,7 @@ from pathlib import Path
 class SettingsDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        root = getRoot(False)
+        root = helpers.getRoot()
         uic.loadUi(str(root / 'ui/settings.ui'), self)
 
     def exec_(self) -> None:
@@ -32,7 +32,7 @@ class AddDialog(QDialog):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        root = getRoot(False)
+        root = helpers.getRoot()
         uic.loadUi(str(root / 'ui/add_note.ui'), self)
         placeholdertext = [
             'Multiple notes can be added at a time by using separate lines',
@@ -69,7 +69,7 @@ class EditDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        root = getRoot(False)
+        root = helpers.getRoot()
         uic.loadUi(str(root / 'ui/edit_project.ui'), self)
         placeholdertext = [
             'Edit markdown code for the selected project on a given day.',
@@ -106,7 +106,7 @@ class EditDialog(QDialog):
         priority_str = literals.priority_levels[self.__current_pb['projects'][selected_proj]['priority']]
         self.priority_combo.setCurrentText(priority_str)
 
-        epoch, *_ = getTimeInfo(self.date_date.dateTime().toPyDateTime())
+        epoch, *_ = helpers.getTimeInfo(self.date_date.dateTime().toPyDateTime())
         epoch = str(epoch)
         proj_reports = self.__current_pb['projects'][self.projselect_combo.currentText()]['reports']
         if proj_reports != None and epoch in proj_reports.keys():
@@ -128,7 +128,7 @@ class EditDialog(QDialog):
             name = self.name_edit.text()
             priority = literals.priority_levels.index(self.priority_combo.currentText())
             proj = self.projselect_combo.currentText()
-            date, *_ = getTimeInfo(self.date_date.dateTime().toPyDateTime())
+            date, *_ = helpers.getTimeInfo(self.date_date.dateTime().toPyDateTime())
             date = str(date)
             if self.edit_tedit.isEnabled():
                 report = self.edit_tedit.toPlainText().split('\n\n')
@@ -147,7 +147,7 @@ class NewDialog(QDialog):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
         self.__noUpdate = False
-        root = getRoot(False)
+        root = helpers.getRoot()
         uic.loadUi(str(root / 'ui/new_project.ui'), self)
         placeholdertext = [
             'Add new project and its corresponding initial todos.',
@@ -214,7 +214,7 @@ class InputDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__submitContents = False
-        root = getRoot(False)
+        root = helpers.getRoot()
         uic.loadUi(str(root / 'ui/input.ui'), self)
         self.cancel_button.clicked.connect(self.__cancelled)
         self.submit_button.clicked.connect(self.__submit)

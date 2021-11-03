@@ -6,18 +6,21 @@ r'''
 - Email: czech.monk90@gmail.com
 '''
 
-import sys, shutil, urllib3, requests, github, json, os
+import os, sys, shutil, json, traceback, datetime
+import urllib3, requests, github
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtWidgets
 from src.sibylMain import SibylMain
 from src.autoUpdate import Updater
 import src.literals as literals
 import src.helpers as helpers
+# import qdarkstyle
 
 
 def main():
-    root = helpers.getRoot(True)
+    root = helpers.getRoot()
     app = QtWidgets.QApplication([])
+    # app.setStyleSheet(<stylesheet string>)
 
     with open(str(root / 'settings.json'), 'r') as f:
         settings = json.load(f)
@@ -56,4 +59,5 @@ def main():
         sys.exit()
 
 if __name__ == '__main__':
+    sys.excepthook = helpers.excepthook
     main()

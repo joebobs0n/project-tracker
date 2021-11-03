@@ -3,7 +3,7 @@ from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
 from pathlib import Path
 from copy import deepcopy
-import json, datetime, re
+import json, datetime, re, os
 import src.literals as literals
 import src.helpers as helpers
 import src.dialogs as dialogs
@@ -20,12 +20,13 @@ class SibylMain(QMainWindow):
         self.__loadSettings()
         self.__initGui()
         self.__clearAll()
+        self.__checkBackup()
         self.__updateDates()
         self.__initTriggers()
         self.__updateReport()
 
     def __initVars(self) -> None:
-        root = helpers.getRoot(False)
+        root = helpers.getRoot()
         self.__vars = {
             'version': literals.version,
             'root_path': root,
@@ -39,7 +40,7 @@ class SibylMain(QMainWindow):
             'time': None,
             'today': None,
             'selected_proj': None,
-            'selected_todo': None
+            'selected_todo_item': None
         }
 
     def __initGui(self) -> None:
@@ -95,6 +96,7 @@ class SibylMain(QMainWindow):
     #! --------------------------------------------------------------------------------------------
 
     def closeEvent(self, evt):
+        del_backup = True
         if self.__get('unsaved'):
             confirm = QMessageBox.warning(
                 self,
@@ -106,7 +108,12 @@ class SibylMain(QMainWindow):
             if confirm == QMessageBox.Save:
                 self.__save()
             elif confirm == QMessageBox.Cancel:
+                del_backup = False
                 evt.ignore()
+        if del_backup:
+            backup_path = self.__get('root_path') / literals.backup_filename
+            if backup_path.exists():
+                os.remove(str(backup_path))
 
 
     #! --- HEAVY LIFTERS --------------------------------------------------------------------------
@@ -208,6 +215,16 @@ class SibylMain(QMainWindow):
                 self.__set('trim_board_hist', 0, cutoff_index)
             self.__vars['board_hist'].append(data[0])
             self.__set('current_index_increment')
+            with open(str(self.__get('root_path') / literals.backup_filename), 'w') as f:
+                to_write = {}
+                self.__set('selected_proj', self.__get('selected_project'))
+                self.__set('selected_todo_item', self.__get('selected_todo'))
+                for key, val in self.__vars.items():
+                    if key in literals.vars_serialize['path']:
+                        val = str(val)
+                    if key not in literals.vars_serialize['ignore']:
+                        to_write[key] = val
+                f.write(json.dumps(to_write, indent=literals.tab_width))
 
         elif action == 'trim_board_hist':
             start, stop = data
@@ -393,8 +410,6 @@ class SibylMain(QMainWindow):
             self.undo_toolbar.setEnabled(True)
 
         self.__set('update_todo_order')
-
-        # self.__statusMessage('history length:', len(self.__get('board_hist')))
 
 
     #! --- MENU TRIGGER FUNCTIONS -----------------------------------------------------------------
@@ -798,6 +813,30 @@ class SibylMain(QMainWindow):
         self.todo_list.clear()
         todos = self.__get('todos')
         self.todo_list.addItems(todos)
+
+    def __checkBackup(self, auto=False):
+        backup_path = self.__get('root_path') / literals.backup_filename
+        if backup_path.exists():
+            if not auto:
+                backup_msg = QMessageBox(
+                    QMessageBox.Information,
+                    'Backup Found',
+                    'Sibyl previously closed unexpectedly and a backup file is found. Would you like to load the backup?',
+                    QMessageBox.Yes | QMessageBox.No,
+                    self
+                )
+                response = backup_msg.exec_()
+            if auto or response == QMessageBox.Yes:
+                backup_path = self.__get('root_path') / literals.backup_filename
+                with open(str(backup_path), 'r') as f:
+                    backup = json.load(f)
+                for key in literals.vars_serialize['path']:
+                    backup[key] = Path(backup[key])
+                for key in literals.vars_serialize['ignore']:
+                    backup[key] = None
+                self.__vars = backup
+                self.__populateProjects(backup['selected_proj'])
+                self.__populateTodos()
 
 
     #! --- UPDATE SAVE FILE -----------------------------------------------------------------------

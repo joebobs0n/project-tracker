@@ -1,9 +1,11 @@
-import re, datetime
-import sys
+import re, datetime, sys, json
+import traceback, functools
 from typing import Union
 from pathlib import Path
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QIcon
+
 
 def convertMarkdown(lines: list[str], timestamp: str) -> list[str]:
     ret = []
@@ -110,7 +112,6 @@ def popup(root: Path, title: str, message: Union[tuple[str, str], str], level: Q
         msg.setInformativeText(infotext)
     msg.setWindowTitle(title)
     icon_path = None
-    print(root)
     if (root / 'icons/dialog.png').exists():
         icon_path = root / 'icons/dialog.png'
     elif (root / 'program_files/icons/dialog.png').exists():
@@ -118,14 +119,48 @@ def popup(root: Path, title: str, message: Union[tuple[str, str], str], level: Q
     msg.setWindowIcon(QIcon(str(icon_path)))
     return msg.exec_()
 
-def getRoot(inRoot):
+def getRoot():
     if getattr(sys, 'frozen', False):
         return Path(sys.executable).parent
     else:
-        return Path(__file__).parent if inRoot else Path(__file__).parent.parent
+        return Path(__file__).parent.parent
 
 def retrieve(data, key):
     try:
         return data[key]
     except KeyError:
         return None
+
+def crashreport(f):
+    @functools.wraps(f)
+    def _crashreport(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            date = datetime.datetime.now().strftime('%H%M%S-%m%d%y')
+            report_name = f'crash-{date}.log.'
+            crash_report = [
+                f'{f.__name__} crashed',
+                traceback.format_exc()
+            ]
+            filepath = getRoot() / report_name
+            with open(str(filepath), 'w') as crashfile:
+                crashfile.write('\n'.join(crash_report))
+            raise e
+    return _crashreport
+
+def excepthook(exc_type, exc_value, exc_tb):
+    tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+    date = datetime.datetime.now().strftime('%H%M%S-%m%d%y')
+    report_name = f'crash-{date}.log'
+    with open(str(getRoot() / 'settings.json'), 'r') as settingsfile:
+        saves_path = json.load(settingsfile)['default_dir']
+    with open(f'{saves_path}/{report_name}', 'w') as crashfile:
+        crashfile.write(tb)
+    popup(
+        getRoot(),
+        'Sibyl Error',
+        f'Sibyl has encountered an error. A crash report named {report_name} has been generated and is located in your default saves directory.',
+        QMessageBox.Critical
+    )
+    QtWidgets.QApplication.quit()
