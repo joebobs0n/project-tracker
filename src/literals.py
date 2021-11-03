@@ -1,24 +1,22 @@
 
 #? [VERSION]
-version = 'v1.2.0'
+version = 'v1.2.1'
 version_notes = {
     'Feature': [
-        ('Crash Reporting', 'Upon crashing, Sibyl creates a crash report and informs the user of its existence. The user at this point can leave an issues ticket on the Github or contact the dev team.'),
-        ('Backup', 'Sibyl automatically creates a backup in the unfortunate case where it closes unexpectedly (crash, "end task" in task manager, "force close" upon restart/shut down, etc). If a backup is found upon booting Sibyl, the user will be prompted if they want to use it. Should they decline, the backup is overwritten.'),
 
     ],
     'Tweak': [
-        ('New Icons', 'New icons have been added. More or less placeholder until more time can be invested into UI design.'),
 
     ],
     'Bug Fix': [
-        ('Get Root Getting Wrong Path', 'The getRoot function was returning the wrong path because the function lives in the helpers file (in src) and would return its parent even when called from a script in the root directory.'),
+        ('Backup Collision', 'When Sibyl auto updates, a backup directory containing the previously installed version\'s app files is created. This directory was creating a name collision with the backup file used for restoring a session. This has been resolved by renaming both offenders to "previous_version" and "backup.json", respectively.'),
 
     ]
 }
 
 #? [INSTALLER]
 settings_filename = 'settings.json'
+ver_backup_folder = 'previous_version'
 ver_backup = [
     'Sibyl.exe',
     'icons',
@@ -31,7 +29,7 @@ installer_cleanup = [
 ]
 
 #? [RUNTIME]
-backup_filename = 'backup'
+backup_filename = 'backup.json'
 tic_rate = 50
 tab_width = 4
 hist_len_on_save = 5
