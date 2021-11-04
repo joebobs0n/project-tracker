@@ -3,6 +3,7 @@ from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
 from pathlib import Path
 from copy import deepcopy
+from numpy import concatenate
 import json, datetime, re, os
 import src.literals as literals
 import src.helpers as helpers
@@ -111,9 +112,7 @@ class SibylMain(QMainWindow):
                 del_backup = False
                 evt.ignore()
         if del_backup:
-            backup_path = self.__get('root_path') / literals.backup_filename
-            if backup_path.exists():
-                os.remove(str(backup_path))
+            self.__deleteBackup()
 
 
     #! --- HEAVY LIFTERS --------------------------------------------------------------------------
@@ -234,6 +233,7 @@ class SibylMain(QMainWindow):
             proj_name, proj_body = data
             new_proj_board = deepcopy(self.__get('current_proj_board'))
             new_proj_board['projects'][proj_name] = proj_body
+            new_proj_board = self.__sortByPriority(new_proj_board)
             self.__set('append_board_hist', new_proj_board)
 
         elif action == 'add_new_todo':
@@ -255,6 +255,7 @@ class SibylMain(QMainWindow):
         elif action == 'complete_project':
             new_proj_board = deepcopy(self.__get('current_proj_board'))
             new_proj_board['completed'][data[0]] = new_proj_board['projects'].pop(data[0])
+            new_proj_board = self.__sortByPriority(new_proj_board)
             self.__set('append_board_hist', new_proj_board)
 
         elif action == 'complete_todo':
@@ -751,6 +752,7 @@ class SibylMain(QMainWindow):
         self.statusBar().showMessage(msg)
 
     def __clearAll(self) -> None:
+        self.__deleteBackup()
         self.__initVars()
         self.__populateProjects()
         self.__populateTodos()
@@ -843,6 +845,11 @@ class SibylMain(QMainWindow):
                 self.__populateProjects(backup['selected_proj'])
                 self.__populateTodos()
 
+    def __deleteBackup(self) -> None:
+        backup_path = self.__get('root_path') / literals.backup_filename
+        if backup_path.exists():
+            os.remove(str(backup_path))
+
 
     #! --- UPDATE SAVE FILE -----------------------------------------------------------------------
     #! --------------------------------------------------------------------------------------------
@@ -884,4 +891,13 @@ class SibylMain(QMainWindow):
         return board
 
     def __sortByPriority(self, board: dict) -> dict:
-        return board
+        ret_board = deepcopy(board)
+        for section in ['projects', 'completed', 'archived']:
+            ret_board[section] = {}
+            categories = [[], [], [], [], [], []]
+            for key in board[section].keys():
+                categories[board[section][key]['priority']].append(key)
+            categories_sorted = [sorted(l) for l in categories]
+            for proj in list(concatenate(categories_sorted).flat):
+                ret_board[section][proj] = board[section][proj]
+        return ret_board

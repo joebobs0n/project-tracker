@@ -3,14 +3,18 @@
 version = 'v1.2.2'
 version_notes = {
     'Feature': [
+        ('Project Board Sorting', 'Projects, completed projects, and archived projects (upcoming feature) are now sorted within backend data structure. Sorting is by priority first and then alphabetically by name. This translates to the report window and projects veiwer showing the projects in this order.'),
 
     ],
     'Tweak': [
         ('Current Filepath now Path', 'Changed the internal variable storing the current filepath from string to Path object. Changed interracting code accordingly.'),
+        ('Clear Backup on Close', 'Closing out a project board now deletes the backup file as well. This prevents the case when a project board is closed out, the program unexpectedly closes, and then upon boot, Sibyl loads a project board that the user has already closed (thus is likely unwanted).'),
+        ('New Colors and Icons', 'Changed a few icons and replaced the teal color with orange for better visibility. The teal was blending in with the white app too well resulting in poor visibility.'),
+        ('Elevated Privilege Executables', 'Executables now run with elevated privileges so installation and writing to directories with elevated read/write requirements are available.'),
 
     ],
     'Bug Fix': [
-        ('README Typos', 'Corrected typos in the README documentation.'),
+        ('Typos', 'Corrected typos in the README documentation.'),
 
     ]
 }
@@ -31,7 +35,7 @@ installer_cleanup = [
 
 #? [RUNTIME]
 backup_filename = 'backup.json'
-tic_rate = 50
+tic_rate = 24
 tab_width = 4
 hist_len_on_save = 5
 gh_repo = 'joebobs0n/project-tracker'
