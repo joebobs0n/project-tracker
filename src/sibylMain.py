@@ -223,7 +223,8 @@ class SibylMain(QMainWindow):
                         val = str(val)
                     if key not in literals.vars_serialize['ignore']:
                         to_write[key] = val
-                f.write(json.dumps(to_write, indent=literals.tab_width))
+                # f.write(json.dumps(to_write, indent=literals.tab_width))
+                f.write(json.dumps(to_write))
 
         elif action == 'trim_board_hist':
             start, stop = data
@@ -897,7 +898,7 @@ class SibylMain(QMainWindow):
             categories = [[], [], [], [], [], []]
             for key in board[section].keys():
                 categories[board[section][key]['priority']].append(key)
-            categories_sorted = [sorted(l) for l in categories]
+            categories_sorted = [sorted(l, key=str.casefold) for l in categories]
             for proj in list(concatenate(categories_sorted).flat):
                 ret_board[section][proj] = board[section][proj]
         return ret_board

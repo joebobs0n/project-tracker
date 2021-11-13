@@ -44,12 +44,12 @@ def main():
         warning.exec_()
 
     if isLatest:
-        if not (root / 'installer').exists():
-            os.mkdir(str(root / 'installer'))
         for item in literals.installer_cleanup:
             item_path = root / item
             if item_path.exists():
-                shutil.move(str(item_path), str(root / 'installer'))
+                if not (root / 'installer').exists():
+                    os.mkdir(str(root / 'installer'))
+                shutil.move(item_path.resolve(), (root / 'installer' / item).resolve())
 
         win = SibylMain()
         win.show()

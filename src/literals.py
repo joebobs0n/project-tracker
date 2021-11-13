@@ -3,7 +3,7 @@
 version = 'v1.2.2'
 version_notes = {
     'Feature': [
-        ('Project Board Sorting', 'Projects, completed projects, and archived projects (upcoming feature) are now sorted within backend data structure. Sorting is by priority first and then alphabetically by name. This translates to the report window and projects veiwer showing the projects in this order.'),
+        ('Project Board Sorting', 'Projects, completed projects, and archived projects (upcoming feature) are now sorted within backend data structure. Sorting is by priority first and then alphabetically by name (case insensitive). This translates to the report window and projects veiwer showing the projects in this order.'),
 
     ],
     'Tweak': [
@@ -15,6 +15,7 @@ version_notes = {
     ],
     'Bug Fix': [
         ('Typos', 'Corrected typos in the README documentation.'),
+        ('Moving Installer Assets Causing Crash', 'If the "installer" directory is not empty after an auto-update and installer assets needed to be moved from the root directory, a crash was happening due to the destination file already existing. This was resolved by providing absolute paths for the source and destination move paths.'),
 
     ]
 }
