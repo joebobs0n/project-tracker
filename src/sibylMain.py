@@ -3,6 +3,7 @@ from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QTreeWidgetItem
 from pathlib import Path
 from copy import deepcopy
+from numpy import concatenate
 import json, datetime, re, os
 import src.literals as literals
 import src.helpers as helpers
@@ -111,9 +112,7 @@ class SibylMain(QMainWindow):
                 del_backup = False
                 evt.ignore()
         if del_backup:
-            backup_path = self.__get('root_path') / literals.backup_filename
-            if backup_path.exists():
-                os.remove(str(backup_path))
+            self.__deleteBackup()
 
 
     #! --- HEAVY LIFTERS --------------------------------------------------------------------------
@@ -224,7 +223,8 @@ class SibylMain(QMainWindow):
                         val = str(val)
                     if key not in literals.vars_serialize['ignore']:
                         to_write[key] = val
-                f.write(json.dumps(to_write, indent=literals.tab_width))
+                # f.write(json.dumps(to_write, indent=literals.tab_width))
+                f.write(json.dumps(to_write))
 
         elif action == 'trim_board_hist':
             start, stop = data
@@ -234,6 +234,7 @@ class SibylMain(QMainWindow):
             proj_name, proj_body = data
             new_proj_board = deepcopy(self.__get('current_proj_board'))
             new_proj_board['projects'][proj_name] = proj_body
+            new_proj_board = self.__sortByPriority(new_proj_board)
             self.__set('append_board_hist', new_proj_board)
 
         elif action == 'add_new_todo':
@@ -255,6 +256,7 @@ class SibylMain(QMainWindow):
         elif action == 'complete_project':
             new_proj_board = deepcopy(self.__get('current_proj_board'))
             new_proj_board['completed'][data[0]] = new_proj_board['projects'].pop(data[0])
+            new_proj_board = self.__sortByPriority(new_proj_board)
             self.__set('append_board_hist', new_proj_board)
 
         elif action == 'complete_todo':
@@ -280,7 +282,7 @@ class SibylMain(QMainWindow):
 
         elif action == 'save_project_board':
             with open(data[0], 'w') as f:
-                f.write(json.dumps(self.__get('current_proj_board'), indent=4))
+                f.write(json.dumps(self.__get('current_proj_board'), indent=literals.tab_width))
             stop_idx = self.__get('current_board_index') + 1
             start_idx = stop_idx - literals.hist_len_on_save
             if start_idx < 0:
@@ -391,8 +393,9 @@ class SibylMain(QMainWindow):
             self.__setEnabled('save', False)
 
         if self.__get('current_filepath') != None:
-            pb_name = Path(self.__get('current_filepath'))
-            pb_name = pb_name.name.replace(pb_name.suffix, '')
+            # pb_name = Path(self.__get('current_filepath'))
+            # pb_name = pb_name.stem
+            pb_name = self.__get('current_filepath').stem
         elif self.__get('current_filepath') == None and self.__get('unsaved'):
             pb_name = 'New Board'
         else:
@@ -454,7 +457,7 @@ class SibylMain(QMainWindow):
             )
             load_filepath = Path(load_filename)
             if load_filepath.exists() and load_filepath.is_file():
-                self.__set('current_filepath', load_filename)
+                self.__set('current_filepath', load_filepath)
                 self.__openProjectBoard()
             elif load_filename != '':
                 QMessageBox.warning(
@@ -740,7 +743,7 @@ class SibylMain(QMainWindow):
 
     def __saveProjectBoard(self, savepath: str) -> bool:
         if savepath != '':
-            self.__set('current_filepath', savepath)
+            self.__set('current_filepath', Path(savepath))
             self.__set('save_project_board', savepath)
             self.__statusMessage(f'Saved as {savepath}')
         else:
@@ -750,6 +753,7 @@ class SibylMain(QMainWindow):
         self.statusBar().showMessage(msg)
 
     def __clearAll(self) -> None:
+        self.__deleteBackup()
         self.__initVars()
         self.__populateProjects()
         self.__populateTodos()
@@ -797,7 +801,11 @@ class SibylMain(QMainWindow):
             if type(obj['priority']) == str:
                 qitem.setText(0, obj['priority'])
             else:
-                priority_text = f'{obj["priority"]}-{literals.priority_levels[obj["priority"]]}'
+                priority = obj['priority']
+                if priority != 0:
+                    priority_text = f'{priority}-{literals.priority_levels[obj["priority"]]}'
+                else:
+                    priority_text = ''
                 qitem.setText(0, priority_text)
             qitem.setText(1, name)
             if name == sel:
@@ -837,6 +845,11 @@ class SibylMain(QMainWindow):
                 self.__vars = backup
                 self.__populateProjects(backup['selected_proj'])
                 self.__populateTodos()
+
+    def __deleteBackup(self) -> None:
+        backup_path = self.__get('root_path') / literals.backup_filename
+        if backup_path.exists():
+            os.remove(str(backup_path))
 
 
     #! --- UPDATE SAVE FILE -----------------------------------------------------------------------
@@ -879,4 +892,13 @@ class SibylMain(QMainWindow):
         return board
 
     def __sortByPriority(self, board: dict) -> dict:
-        return board
+        ret_board = deepcopy(board)
+        for section in ['projects', 'completed', 'archived']:
+            ret_board[section] = {}
+            categories = [[], [], [], [], [], []]
+            for key in board[section].keys():
+                categories[board[section][key]['priority']].append(key)
+            categories_sorted = [sorted(l, key=str.casefold) for l in categories]
+            for proj in list(concatenate(categories_sorted).flat):
+                ret_board[section][proj] = board[section][proj]
+        return ret_board

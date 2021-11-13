@@ -35,7 +35,7 @@
 In my day to day, I have many projects that I _could_ be working on and that I would often _love_ to be working on, however, I also have a terrible memory. This has led me to search for and try just about every major (and some not so major) project/todo tracker solutions over the years. A few of these include:
 
 - [Monday](https://monday.com/)
-- [Jura](https://www.atlassian.com/software/jira)
+- [Jira](https://www.atlassian.com/software/jira)
 - [Asana](https://asana.com/)
 - [Trello](https://trello.com/en-US)
 - [Microsoft One Note](https://www.onenote.com/download)

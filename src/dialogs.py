@@ -80,7 +80,7 @@ class EditDialog(QDialog):
         self.edit_tedit.setPlaceholderText('\n'.join(placeholdertext))
         self.edit_tedit.setFocus()
         self.edit_tedit.setEnabled(False)
-        self.priority_combo.addItems(literals.priority_levels[1:])
+        self.priority_combo.addItems(literals.priority_levels[1:5])
 
         today = dt.date.today()
         self.date_date.setMaximumDate(today)

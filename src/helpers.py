@@ -1,5 +1,6 @@
 import re, datetime, sys, json
-import traceback, functools
+import traceback
+# import functools
 from typing import Union
 from pathlib import Path
 from PyQt5 import QtWidgets
@@ -131,23 +132,23 @@ def retrieve(data, key):
     except KeyError:
         return None
 
-def crashreport(f):
-    @functools.wraps(f)
-    def _crashreport(*args, **kwargs):
-        try:
-            return f(*args, **kwargs)
-        except Exception as e:
-            date = datetime.datetime.now().strftime('%H%M%S-%m%d%y')
-            report_name = f'crash-{date}.log.'
-            crash_report = [
-                f'{f.__name__} crashed',
-                traceback.format_exc()
-            ]
-            filepath = getRoot() / report_name
-            with open(str(filepath), 'w') as crashfile:
-                crashfile.write('\n'.join(crash_report))
-            raise e
-    return _crashreport
+# def crashreport(f):
+#     @functools.wraps(f)
+#     def _crashreport(*args, **kwargs):
+#         try:
+#             return f(*args, **kwargs)
+#         except Exception as e:
+#             date = datetime.datetime.now().strftime('%H%M%S-%m%d%y')
+#             report_name = f'crash-{date}.log.'
+#             crash_report = [
+#                 f'{f.__name__} crashed',
+#                 traceback.format_exc()
+#             ]
+#             filepath = getRoot() / report_name
+#             with open(str(filepath), 'w') as crashfile:
+#                 crashfile.write('\n'.join(crash_report))
+#             raise e
+#     return _crashreport
 
 def excepthook(exc_type, exc_value, exc_tb):
     tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
